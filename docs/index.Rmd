@@ -27,8 +27,8 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 | **[A]** 2159 rows (observations)
 |
 | **[B]** 16 columns (variables)
-| **[B.1]** 2/16 response = <span style="color: #FF0000">unfav</span> and <span style="color: #FF0000">mort</span> variables (factor)
-| **[B.2]** 14/16 predictors = All remaining variables (4/14 numeric + 10/14 factor)
+|      **[B.1]** 2/16 response = <span style="color: #FF0000">unfav</span> and <span style="color: #FF0000">mort</span> variables (factor)
+|      **[B.2]** 14/16 predictors = All remaining variables (4/14 numeric + 10/14 factor)
 |     
 | 
 ```{r section_1.1, warning=FALSE, message=FALSE}
@@ -184,19 +184,19 @@ PDA <- TBI.Analysis
 | Data quality assessment:
 |
 | **[A]** Missing observations noted for 10 variables with NA.Count>0 and Fill.Rate<1.0.
-| **[A.1]** <span style="color: #FF0000">hypoxia</span> variable (factor) with NA.Count=249 and Fill.Rate=0.885 
-| **[A.2]** <span style="color: #FF0000">hypotens</span> variable (factor) with NA.Count=59 and Fill.Rate=0.973 
-| **[A.3]** <span style="color: #FF0000">cisterns</span> variable (factor) with NA.Count=257 and Fill.Rate=0.881 
-| **[A.4]** <span style="color: #FF0000">shift</span> variable (factor) with NA.Count=252 and Fill.Rate=0.883 
-| **[A.5]** <span style="color: #FF0000">tsah</span> variable (factor) with NA.Count=96 and Fill.Rate=0.956 
-| **[A.6]** <span style="color: #FF0000">edh</span> variable (factor) with NA.Count=38 and Fill.Rate=0.982 
-| **[A.7]** <span style="color: #FF0000">pupil</span> variable (factor) with NA.Count=123 and Fill.Rate=0.943 
-| **[A.8]** <span style="color: #FF0000">ctclass</span> variable (factor) with NA.Count=25 and Fill.Rate=0.988 
-| **[A.9]** <span style="color: #FF0000">hb</span> variable (numeric) with NA.Count=24 and Fill.Rate=0.989 
-| **[A.10]** <span style="color: #FF0000">glucose</span> variable (numeric) with NA.Count=64 and Fill.Rate=0.970 
+|      **[A.1]** <span style="color: #FF0000">hypoxia</span> variable (factor) with NA.Count=249 and Fill.Rate=0.885 
+|      **[A.2]** <span style="color: #FF0000">hypotens</span> variable (factor) with NA.Count=59 and Fill.Rate=0.973 
+|      **[A.3]** <span style="color: #FF0000">cisterns</span> variable (factor) with NA.Count=257 and Fill.Rate=0.881 
+|      **[A.4]** <span style="color: #FF0000">shift</span> variable (factor) with NA.Count=252 and Fill.Rate=0.883 
+|      **[A.5]** <span style="color: #FF0000">tsah</span> variable (factor) with NA.Count=96 and Fill.Rate=0.956 
+|      **[A.6]** <span style="color: #FF0000">edh</span> variable (factor) with NA.Count=38 and Fill.Rate=0.982 
+|      **[A.7]** <span style="color: #FF0000">pupil</span> variable (factor) with NA.Count=123 and Fill.Rate=0.943 
+|      **[A.8]** <span style="color: #FF0000">ctclass</span> variable (factor) with NA.Count=25 and Fill.Rate=0.988 
+|      **[A.9]** <span style="color: #FF0000">hb</span> variable (numeric) with NA.Count=24 and Fill.Rate=0.989 
+|      **[A.10]** <span style="color: #FF0000">glucose</span> variable (numeric) with NA.Count=64 and Fill.Rate=0.970 
 |
 | **[B]** Low variance noted for 1 variable with First.Second.Mode.Ratio>5 or Unique.Count.Ratio<0.01.
-| **[B.1]** <span style="color: #FF0000">edh</span> variable (factor) with First.Second.Mode.Ratio=6.885 
+|      **[B.1]** <span style="color: #FF0000">edh</span> variable (factor) with First.Second.Mode.Ratio=6.885 
 |
 | **[C]** No high skewness (Skewness>3 or Skewness<(-3))  noted for any variable.
 |
@@ -420,27 +420,27 @@ if (length(names(DQA.Predictors.Numeric))==0) {
 | Missing data pattern assessment:
 |
 | **[A]** The original dataset was reconstructed using the <span style="color: #0000FF">clean</span> method from the <mark style="background-color: #CCECFF">**missCompare**</mark> package.
-| **[A.1]** All observations and variables retained.
-| **[A.1.1]** All variables were within the defined 50% observation fill rate or missingness ratio criterion.
-| **[A.1.2]** All observation were within the defined 80% variable fill rate or missingness ratio criterion.
-| **[A.2]** All 12 factor variables were converted to numeric variables.
-| **[A.3]** All NA labels retained. No NA labels were re-coded.
+|      **[A.1]** All observations and variables retained.
+|             **[A.1.1]** All variables were within the defined 50% observation fill rate or missingness ratio criterion.
+|             **[A.1.2]** All observation were within the defined 80% variable fill rate or missingness ratio criterion.
+|             **[A.2]** All 12 factor variables were converted to numeric variables.
+|             **[A.3]** All NA labels retained. No NA labels were re-coded.
 |
 | **[B]** The missing data patterns were summarized using the <span style="color: #0000FF">get_data</span> method from the <mark style="background-color: #CCECFF">**missCompare**</mark> package. 
-| **[B.1]** There were 1431/2159 (0.663) observations assessed as complete.
-| **[B.2]** There were 1187/34544 (0.034) instances assessed as missing.
-| **[B.3]** The <span style="color: #FF0000">cisterns</span> variable (factor), <span style="color: #FF0000">shift</span> variable (factor) and <span style="color: #FF0000">hypoxia</span> variable (factor) contributed the most missing data.
-| **[B.4]** There are 59 missing data patterns observed employing various combinations of the 16 variables. 
-| **[B.5]** The missing data patterns are clustered between the following variables:
-| **[B.5.1]** <span style="color: #FF0000">cisterns</span> variable (factor) and <span style="color: #FF0000">shift</span> variable (factor) variables.
-| **[B.5.2]** <span style="color: #FF0000">hb</span> variable (numeric) and <span style="color: #FF0000">glucose</span> variable (numeric) variables.
-| **[B.5.3]** <span style="color: #FF0000">trash</span> variable (factor) and <span style="color: #FF0000">edh</span> variable (factor) variables.
-| **[B.5.4]** <span style="color: #FF0000">hypoxia</span> variable (factor) and <span style="color: #FF0000">hypotens</span> (factor) variables.
-| **[B.5.5]** <span style="color: #FF0000">pupil</span> variable (factor) and <span style="color: #FF0000">ctclass</span> variable (factor) variables.
-| **[B.6]** Thresholding the minimum number of observations per distinct missing data pattern showed different percentages of observations retained:
-| **[B.6.1]** With the minimum number of observations per distinct missing data pattern set to 5, 89% of observations are retained.
-| **[B.6.2]** With the minimum number of observations per distinct missing data pattern set to 10, 81% of observations are retained.
-| **[B.6.3]** With the minimum number of observations per distinct missing data pattern set to 20, 74% of observations are retained.
+|      **[B.1]** There were 1431/2159 (0.663) observations assessed as complete.
+|      **[B.2]** There were 1187/34544 (0.034) instances assessed as missing.
+|      **[B.3]** The <span style="color: #FF0000">cisterns</span> variable (factor), <span style="color: #FF0000">shift</span> variable (factor) and <span style="color: #FF0000">hypoxia</span> variable (factor) contributed the most missing data.
+|      **[B.4]** There are 59 missing data patterns observed employing various combinations of the 16 variables. 
+|      **[B.5]** The missing data patterns are clustered between the following variables:
+|             **[B.5.1]** <span style="color: #FF0000">cisterns</span> variable (factor) and <span style="color: #FF0000">shift</span> variable (factor) variables.
+|             **[B.5.2]** <span style="color: #FF0000">hb</span> variable (numeric) and <span style="color: #FF0000">glucose</span> variable (numeric) variables.
+|             **[B.5.3]** <span style="color: #FF0000">trash</span> variable (factor) and <span style="color: #FF0000">edh</span> variable (factor) variables.
+|             **[B.5.4]** <span style="color: #FF0000">hypoxia</span> variable (factor) and <span style="color: #FF0000">hypotens</span> (factor) variables.
+|             **[B.5.5]** <span style="color: #FF0000">pupil</span> variable (factor) and <span style="color: #FF0000">ctclass</span> variable (factor) variables.
+|      **[B.6]** Thresholding the minimum number of observations per distinct missing data pattern showed different percentages of observations retained:
+|            **[B.6.1]** With the minimum number of observations per distinct missing data pattern set to 5, 89% of observations are retained.
+|            **[B.6.2]** With the minimum number of observations per distinct missing data pattern set to 10, 81% of observations are retained.
+|            **[B.6.3]** With the minimum number of observations per distinct missing data pattern set to 20, 74% of observations are retained.
 |
 ```{r section_1.3.1, warning=FALSE, message=FALSE}
 ##################################
@@ -500,18 +500,18 @@ MDPA.Cleaned.Metadata$Vars_above_half
 | Missing data mechanism assessment:
 |
 | **[A]** The missing data mechanisms were summarized using the <span style="color: #0000FF">RBtest</span> method from the <mark style="background-color: #CCECFF">**RBtest**</mark> package. 
-| **[A.1]** Variables assessed with Missing at Random (MAR) mechanism as evaluated against the <span style="color: #FF0000">trial</span> variable (factor), <span style="color: #FF0000">age</span> variable (numeric), <span style="color: #FF0000">motor</span> variable (factor), <span style="color: #FF0000">d.sysbp</span> variable (numeric), <span style="color: #FF0000">unfav</span> variable (factor) and <span style="color: #FF0000">mort</span> variable (factor) with complete observations :
-| **[A.1.1]** <span style="color: #FF0000">hypoxia</span> variable (factor)
-| **[A.1.2]** <span style="color: #FF0000">cisterns</span> variable (factor)
-| **[A.1.3]** <span style="color: #FF0000">ctclass</span> variable (factor)
-| **[A.2]** Variables assessed with Missing Completely at Random (MCAR) mechanism as evaluated against the <span style="color: #FF0000">trial</span> variable (factor), <span style="color: #FF0000">age</span> variable (numeric), <span style="color: #FF0000">motor</span> variable (factor), <span style="color: #FF0000">d.sysbp</span> variable (numeric), <span style="color: #FF0000">unfav</span> variable (factor) and <span style="color: #FF0000">mort</span> variable (factor) with complete observations :
-| **[A.2.1]** <span style="color: #FF0000">hypotens</span> variable (factor)
-| **[A.2.2]** <span style="color: #FF0000">shift</span> variable (factor)
-| **[A.2.3]** <span style="color: #FF0000">tsah</span> variable (factor)
-| **[A.2.4]** <span style="color: #FF0000">edh</span> variable (factor)
-| **[A.2.5]** <span style="color: #FF0000">pupil</span> variable (factor)
-| **[A.2.6]** <span style="color: #FF0000">hb</span> variable (numeric)
-| **[A.2.7]** <span style="color: #FF0000">glucose</span> variable (numeric)
+|      **[A.1]** Variables assessed with Missing at Random (MAR) mechanism as evaluated against the <span style="color: #FF0000">trial</span> variable (factor), <span style="color: #FF0000">age</span> variable (numeric), <span style="color: #FF0000">motor</span> variable (factor), <span style="color: #FF0000">d.sysbp</span> variable (numeric), <span style="color: #FF0000">unfav</span> variable (factor) and <span style="color: #FF0000">mort</span> variable (factor) with complete observations :
+|             **[A.1.1]** <span style="color: #FF0000">hypoxia</span> variable (factor)
+|             **[A.1.2]** <span style="color: #FF0000">cisterns</span> variable (factor)
+|             **[A.1.3]** <span style="color: #FF0000">ctclass</span> variable (factor)
+|      **[A.2]** Variables assessed with Missing Completely at Random (MCAR) mechanism as evaluated against the <span style="color: #FF0000">trial</span> variable (factor), <span style="color: #FF0000">age</span> variable (numeric), <span style="color: #FF0000">motor</span> variable (factor), <span style="color: #FF0000">d.sysbp</span> variable (numeric), <span style="color: #FF0000">unfav</span> variable (factor) and <span style="color: #FF0000">mort</span> variable (factor) with complete observations :
+|             **[A.2.1]** <span style="color: #FF0000">hypotens</span> variable (factor)
+|             **[A.2.2]** <span style="color: #FF0000">shift</span> variable (factor)
+|             **[A.2.3]** <span style="color: #FF0000">tsah</span> variable (factor)
+|             **[A.2.4]** <span style="color: #FF0000">edh</span> variable (factor)
+|             **[A.2.5]** <span style="color: #FF0000">pupil</span> variable (factor)
+|             **[A.2.6]** <span style="color: #FF0000">hb</span> variable (numeric)
+|             **[A.2.7]** <span style="color: #FF0000">glucose</span> variable (numeric)
 |
 ```{r section_1.3.2, warning=FALSE, message=FALSE}
 ##################################
@@ -535,22 +535,22 @@ RBtest(TBI.Analysis)
 | Missing data imputation method evaluation:
 |
 | **[A]** The performance of 16 missing data imputation methods were evaluated on the simulated dataset using the <span style="color: #0000FF">impute_simulated</span> method from the <mark style="background-color: #CCECFF">**missCompare**</mark> package. 
-| **[A.1]** Method 1: Random replacement
-| **[A.2]** Method 2: Median imputation
-| **[A.3]** Method 3: Mean imputation
-| **[A.4]** Method 4: missMDA Regularized
-| **[A.5]** Method 5: missMDA EM
-| **[A.6]** Method 6:  pcaMethods PPCA
-| **[A.7]** Method 7:  pcaMethods svdImpute
-| **[A.8]** Method 8:  pcaMethods BPCA
-| **[A.9]** Method 9:  pcaMethods NIPALS
-| **[A.10]** Method 10:  pcaMethods NLPCA
-| **[A.11]** Method 11:  mice mixed
-| **[A.12]** Method 12:  mi Bayesian
-| **[A.13]** Method 13:  Amelia II
-| **[A.14]** Method 14:  missForest
-| **[A.15]** Method 15:  Hmisc aregImpute
-| **[A.16]** Method 16:  VIM kNN
+|      **[A.1]** Method 1: Random replacement
+|      **[A.2]** Method 2: Median imputation
+|      **[A.3]** Method 3: Mean imputation
+|      **[A.4]** Method 4: missMDA Regularized
+|      **[A.5]** Method 5: missMDA EM
+|      **[A.6]** Method 6:  pcaMethods PPCA
+|      **[A.7]** Method 7:  pcaMethods svdImpute
+|      **[A.8]** Method 8:  pcaMethods BPCA
+|      **[A.9]** Method 9:  pcaMethods NIPALS
+|      **[A.10]** Method 10:  pcaMethods NLPCA
+|      **[A.11]** Method 11:  mice mixed
+|      **[A.12]** Method 12:  mi Bayesian
+|      **[A.13]** Method 13:  Amelia II
+|      **[A.14]** Method 14:  missForest
+|      **[A.15]** Method 15:  Hmisc aregImpute
+|      **[A.16]** Method 16:  VIM kNN
 |
 | **[B]** The missing data imputation methods from the <mark style="background-color: #CCECFF">**missMDA**</mark> and <mark style="background-color: #CCECFF">**pcaMethods**</mark> packages had the best MAE and RMSE performance.
 |
@@ -663,9 +663,9 @@ MDIE.Simulated.Imputed$Plot_KS
 | Missing data imputation method implementation:
 |
 | **[A]** The missing data imputation method from the <mark style="background-color: #CCECFF">**mice**</mark> package as implemented in the <mark style="background-color: #CCECFF">**missCompare**</mark> package showed: 
-| **[A.1]** Relatively poor data plausibility for the numeric variables in the imputed dataset as compared to the original dataset.
-| **[A.2]** Relatively good data plausibility for the categorical variables in the imputed dataset as compared to the original dataset.
-| **[A.3]** Consistent numeric variable clustering in the imputed dataset as compared to the original dataset.
+|      **[A.1]** Relatively poor data plausibility for the numeric variables in the imputed dataset as compared to the original dataset.
+|      **[A.2]** Relatively good data plausibility for the categorical variables in the imputed dataset as compared to the original dataset.
+|      **[A.3]** Consistent numeric variable clustering in the imputed dataset as compared to the original dataset.
 |
 ```{r section_1.5.1, warning=FALSE, message=FALSE}
 ##################################
@@ -750,9 +750,9 @@ MDIPID.Imputed.MiceMixed.Diagnostics$Variable_clusters_orig
 | Missing data imputation method implementation:
 |
 | **[A]** The missing data imputation method from the <mark style="background-color: #CCECFF">**Hmisc**</mark> package as implemented in the <mark style="background-color: #CCECFF">**missCompare**</mark> package showed: 
-| **[A.1]** Relatively poor data plausibility for the numeric variables in the imputed dataset as compared to the original dataset.
-| **[A.2]** Relatively good data plausibility for the categorical variables in the imputed dataset as compared to the original dataset.
-| **[A.3]** Consistent numeric variable clustering in the imputed dataset as compared to the original dataset.
+|      **[A.1]** Relatively poor data plausibility for the numeric variables in the imputed dataset as compared to the original dataset.
+|      **[A.2]** Relatively good data plausibility for the categorical variables in the imputed dataset as compared to the original dataset.
+|      **[A.3]** Consistent numeric variable clustering in the imputed dataset as compared to the original dataset.
 |
 ```{r section_1.5.2, warning=FALSE, message=FALSE}
 ##################################
@@ -837,9 +837,9 @@ MDIPID.Imputed.HmiscAregImpute.Diagnostics$Variable_clusters_orig
 | Missing data imputation method implementation:
 |
 | **[A]** The missing data imputation method from the <mark style="background-color: #CCECFF">**VIM**</mark> package as implemented in the <mark style="background-color: #CCECFF">**missCompare**</mark> package showed: 
-| **[A.1]** Relatively good data plausibility for the numeric variables in the imputed dataset as compared to the original dataset.
-| **[A.2]** Relatively poor data plausibility for the categorical variables in the imputed dataset as compared to the original dataset.
-| **[A.3]** Consistent numeric variable clustering in the imputed dataset as compared to the original dataset.
+|      **[A.1]** Relatively good data plausibility for the numeric variables in the imputed dataset as compared to the original dataset.
+|      **[A.2]** Relatively poor data plausibility for the categorical variables in the imputed dataset as compared to the original dataset.
+|      **[A.3]** Consistent numeric variable clustering in the imputed dataset as compared to the original dataset.
 |
 ```{r section_1.5.3, warning=FALSE, message=FALSE}
 ##################################
