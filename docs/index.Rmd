@@ -1,0 +1,945 @@
+---
+title: "R : Missing Data Pattern Analysis, Imputation Method Evaluation and Post-Imputation Diagnostics"
+author: "John Pauline Pineda"
+date: "August 16, 2022"
+output:  
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: readable
+    highlight: tango
+    css: doc.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
+```
+# **1. Table of Contents**
+|
+| This document presents a non-exhaustive list of procedures on missing data pattern analysis, imputation method evaluation and post imputation diagnostics using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>.    
+|
+##  1.1 Sample Data
+|
+| The <mark style="background-color: #EEEEEE;color: #FF0000">**Traumatic Brain Injury**</mark>  dataset from the book  <mark style="background-color: #CCECFF">**Clinical Prediction Models**</mark> was used for this illustrated example.
+|
+| Preliminary dataset assessment:
+|
+| **[A]** 2159 rows (observations)
+|
+| **[B]** 16 columns (variables)
+| **[B.1]** 2/16 response = <span style="color: #FF0000">unfav</span> and <span style="color: #FF0000">mort</span> variables (factor)
+| **[B.2]** 14/16 predictors = All remaining variables (4/14 numeric + 10/14 factor)
+|     
+| 
+```{r section_1.1, warning=FALSE, message=FALSE}
+##################################
+# Loading R libraries
+##################################
+library(datasets)
+library(caret)
+library(moments)
+library(missCompare)
+library(mi)
+library(missMDA)
+library(pcaMethods)
+library(missForest)
+library(rms)
+library(mice)
+library(VIM)
+library(misty)
+library(Hmisc)
+library(Amelia)
+library(foreign)
+library(RBtest)
+
+######################################
+# Setting the working directory
+######################################
+setwd("D:/R_Codes/Markdown/MissingDataImputation")
+
+##################################
+# Loading dataset
+##################################
+TBI <- read.spss("TBI.sav",use.value.labels=F,to.data.frame=T)
+
+##################################
+# Performing a general exploration of the dataset
+##################################
+dim(TBI)
+summary(TBI)
+describe(TBI)
+
+##################################
+# Performing re-categorization and re-grouping
+# of factor variables
+##################################
+TBI$pupil	<- ifelse(TBI$d.pupil==9,NA,TBI$d.pupil)
+
+TBI$motor	  <- ifelse(is.na(TBI$d.motor),9,TBI$d.motor)
+TBI$motor1	<- ifelse(TBI$motor==1,1,0)
+TBI$motor2	<- ifelse(TBI$motor==2,1,0)
+TBI$motor3  <- ifelse(TBI$motor==3,1,0)
+TBI$motor4  <- ifelse(TBI$motor==4,1,0)
+TBI$motor56	<- ifelse(TBI$motor==5 | TBI$motor==6,1,0)
+TBI$motor9	<- ifelse(TBI$motor==9,1,0)
+TBI$motorG	<- ifelse(TBI$motor1==1,5,
+                     ifelse(TBI$motor2==1,4,
+                            ifelse(TBI$motor3==1,3,
+                                   ifelse(TBI$motor4==1,2,
+                                          ifelse(TBI$motor56==1,1,
+                                                 ifelse(TBI$motor9==1,9,NA))))))
+TBI$motorG	<- as.factor(TBI$motorG)
+
+TBI$mort    <- ifelse(TBI$d.gos==1,1,ifelse(TBI$d.gos==6,NA,0))
+TBI$deadveg <- ifelse(TBI$d.gos<3,1,ifelse(TBI$d.gos==6,NA,0))
+TBI$unfav   <- ifelse(TBI$d.gos<4,1,ifelse(TBI$d.gos==6,NA,0))
+TBI$good    <- ifelse(TBI$d.gos<5,1,ifelse(TBI$d.gos==6,NA,0))
+
+TBI$ctclass2  <- ifelse(TBI$ctclass==2,1,0)
+TBI$ctclass1  <- ifelse(TBI$ctclass==1,1,0)
+TBI$ctclass34 <- ifelse(TBI$ctclass==3 | TBI$ctclass==4,1,0)
+TBI$ctclass56 <- ifelse(TBI$ctclass==5 | TBI$ctclass==6,1,0)
+TBI$ctclassr4 <- ifelse(TBI$ctclass1==1,2,
+                        ifelse(TBI$ctclass2==1,1,
+                               ifelse(TBI$ctclass34==1,3,
+                                      ifelse(TBI$ctclass56==1,4,NA))))
+TBI$ctclassr4	<- as.factor(TBI$ctclassr4)
+TBI$ctclassr3 <- ifelse(TBI$ctclass1==1 | TBI$ctclass2==1,1,
+                        ifelse(TBI$ctclass34==1,2,
+                               ifelse(TBI$ctclass56==1,3,NA)))
+TBI$ctclassr3	<- as.factor(TBI$ctclassr3)
+
+TBI.Analysis	<- TBI[,Cs(trial, 
+                        age, 
+                        hypoxia, 
+                        hypotens, 
+                        cisterns, 
+                        shift,
+                        tsah, 
+                        edh, 
+                        pupil, 
+                        motorG, 
+                        ctclassr3,
+                        d.sysbpt,
+                        hbt,
+                        glucoset, 
+                        unfav, 
+                        mort)]
+
+names(TBI.Analysis) <- Cs(trial, 
+                          age, 
+                          hypoxia, 
+                          hypotens, 
+                          cisterns, 
+                          shift,
+                          tsah, 
+                          edh, 
+                          pupil, 
+                          motor, 
+                          ctclass,
+                          d.sysbp,
+                          hb,
+                          glucose, 
+                          unfav, 
+                          mort	)
+TBI.Analysis$cisterns <- ifelse(TBI.Analysis$cisterns>1,1,0)
+
+TBI.Analysis$trial    <- as.factor(TBI.Analysis$trial)
+TBI.Analysis$age      <- as.numeric(TBI.Analysis$age)
+TBI.Analysis$hypoxia  <-as.factor(TBI.Analysis$hypoxia)
+TBI.Analysis$hypotens <-as.factor(TBI.Analysis$hypotens)
+TBI.Analysis$cisterns <-as.factor(TBI.Analysis$cisterns)
+TBI.Analysis$shift    <-as.factor(TBI.Analysis$shift)
+TBI.Analysis$tsah     <-as.factor(TBI.Analysis$tsah)
+TBI.Analysis$edh      <-as.factor(TBI.Analysis$edh)
+TBI.Analysis$pupil    <-as.factor(TBI.Analysis$pupil)
+TBI.Analysis$motor    <-as.factor(TBI.Analysis$motor)
+TBI.Analysis$ctclass  <-as.factor(TBI.Analysis$ctclass)
+TBI.Analysis$d.sysbp  <-as.numeric(TBI.Analysis$d.sysbp)
+TBI.Analysis$hb       <-as.numeric(TBI.Analysis$hb)
+TBI.Analysis$glucose  <-as.numeric(TBI.Analysis$glucose)
+TBI.Analysis$unfav    <-as.factor(TBI.Analysis$unfav)
+TBI.Analysis$mort     <-as.factor(TBI.Analysis$mort)
+
+dim(TBI.Analysis)
+describe(TBI.Analysis)
+summary(TBI.Analysis)
+
+##################################
+# Formulating a data type assessment summary
+##################################
+PDA <- TBI.Analysis
+(PDA.Summary <- data.frame(
+  Column.Index=c(1:length(names(PDA))),
+  Column.Name= names(PDA), 
+  Column.Type=sapply(PDA, function(x) class(x)), 
+  row.names=NULL)
+)
+
+
+```
+
+##  1.2 Data Quality Assessment
+|
+| Data quality assessment:
+|
+| **[A]** Missing observations noted for 10 variables with NA.Count>0 and Fill.Rate<1.0.
+| **[A.1]** <span style="color: #FF0000">hypoxia</span> variable (factor) with NA.Count=249 and Fill.Rate=0.885 
+| **[A.2]** <span style="color: #FF0000">hypotens</span> variable (factor) with NA.Count=59 and Fill.Rate=0.973 
+| **[A.3]** <span style="color: #FF0000">cisterns</span> variable (factor) with NA.Count=257 and Fill.Rate=0.881 
+| **[A.4]** <span style="color: #FF0000">shift</span> variable (factor) with NA.Count=252 and Fill.Rate=0.883 
+| **[A.5]** <span style="color: #FF0000">tsah</span> variable (factor) with NA.Count=96 and Fill.Rate=0.956 
+| **[A.6]** <span style="color: #FF0000">edh</span> variable (factor) with NA.Count=38 and Fill.Rate=0.982 
+| **[A.7]** <span style="color: #FF0000">pupil</span> variable (factor) with NA.Count=123 and Fill.Rate=0.943 
+| **[A.8]** <span style="color: #FF0000">ctclass</span> variable (factor) with NA.Count=25 and Fill.Rate=0.988 
+| **[A.9]** <span style="color: #FF0000">hb</span> variable (numeric) with NA.Count=24 and Fill.Rate=0.989 
+| **[A.10]** <span style="color: #FF0000">glucose</span> variable (numeric) with NA.Count=64 and Fill.Rate=0.970 
+|
+| **[B]** Low variance noted for 1 variable with First.Second.Mode.Ratio>5 or Unique.Count.Ratio<0.01.
+| **[B.1]** <span style="color: #FF0000">edh</span> variable (factor) with First.Second.Mode.Ratio=6.885 
+|
+| **[C]** No high skewness (Skewness>3 or Skewness<(-3))  noted for any variable.
+|
+```{r section_1.2, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+DQA <- TBI.Analysis
+
+##################################
+# Listing all predictors
+##################################
+DQA.Predictors <- DQA[,names(DQA)]
+
+##################################
+# Formulating an overall data quality assessment summary
+##################################
+(DQA.Summary <- data.frame(
+  Column.Index=c(1:length(names(DQA))),
+  Column.Name= names(DQA), 
+  Column.Type=sapply(DQA, function(x) class(x)), 
+  Row.Count=sapply(DQA, function(x) nrow(DQA)),
+  NA.Count=sapply(DQA,function(x)sum(is.na(x))),
+  Fill.Rate=sapply(DQA,function(x)format(round((sum(!is.na(x))/nrow(DQA)),3),nsmall=3)),
+  row.names=NULL)
+)
+
+##################################
+# Listing all numeric predictors
+##################################
+DQA.Predictors.Numeric <- DQA.Predictors[,sapply(DQA.Predictors, is.numeric)]
+
+if (length(names(DQA.Predictors.Numeric))>0) {
+    print(paste0("There are ",
+               (length(names(DQA.Predictors.Numeric))),
+               " numeric predictor variable(s)."))
+} else {
+  print("There are no numeric predictor variables.")
+}
+
+##################################
+# Listing all factor predictors
+##################################
+DQA.Predictors.Factor <- DQA.Predictors[,sapply(DQA.Predictors, is.factor)]
+
+if (length(names(DQA.Predictors.Factor))>0) {
+    print(paste0("There are ",
+               (length(names(DQA.Predictors.Factor))),
+               " factor predictor variable(s)."))
+} else {
+  print("There are no factor predictor variables.")
+}
+
+##################################
+# Formulating a data quality assessment summary for factor predictors
+##################################
+if (length(names(DQA.Predictors.Factor))>0) {
+  
+  ##################################
+  # Formulating a function to determine the first mode
+  ##################################
+  FirstModes <- function(x) {
+    ux <- unique(na.omit(x))
+    tab <- tabulate(match(x, ux))
+    ux[tab == max(tab)]
+  }
+
+  ##################################
+  # Formulating a function to determine the second mode
+  ##################################
+  SecondModes <- function(x) {
+    ux <- unique(na.omit(x))
+    tab <- tabulate(match(x, ux))
+    fm = ux[tab == max(tab)]
+    sm = x[!(x %in% fm)]
+    usm <- unique(sm)
+    tabsm <- tabulate(match(sm, usm))
+    usm[tabsm == max(tabsm)]
+  }
+  
+  (DQA.Predictors.Factor.Summary <- data.frame(
+  Column.Name= names(DQA.Predictors.Factor), 
+  Column.Type=sapply(DQA.Predictors.Factor, function(x) class(x)), 
+  Unique.Count=sapply(DQA.Predictors.Factor, function(x) length(unique(x))),
+  First.Mode.Value=sapply(DQA.Predictors.Factor, function(x) as.character(FirstModes(x)[1])),
+  Second.Mode.Value=sapply(DQA.Predictors.Factor, function(x) as.character(SecondModes(x)[1])),
+  First.Mode.Count=sapply(DQA.Predictors.Factor, function(x) sum(na.omit(x) == FirstModes(x)[1])),
+  Second.Mode.Count=sapply(DQA.Predictors.Factor, function(x) sum(na.omit(x) == SecondModes(x)[1])),
+  Unique.Count.Ratio=sapply(DQA.Predictors.Factor, function(x) format(round((length(unique(x))/nrow(DQA.Predictors.Factor)),3), nsmall=3)),
+  First.Second.Mode.Ratio=sapply(DQA.Predictors.Factor, function(x) format(round((sum(na.omit(x) == FirstModes(x)[1])/sum(na.omit(x) == SecondModes(x)[1])),3), nsmall=3)),
+  row.names=NULL)
+  )
+  
+} 
+
+##################################
+# Formulating a data quality assessment summary for numeric predictors
+##################################
+if (length(names(DQA.Predictors.Numeric))>0) {
+  
+  ##################################
+  # Formulating a function to determine the first mode
+  ##################################
+  FirstModes <- function(x) {
+    ux <- unique(na.omit(x))
+    tab <- tabulate(match(x, ux))
+    ux[tab == max(tab)]
+  }
+
+  ##################################
+  # Formulating a function to determine the second mode
+  ##################################
+  SecondModes <- function(x) {
+    ux <- unique(na.omit(x))
+    tab <- tabulate(match(x, ux))
+    fm = ux[tab == max(tab)]
+    sm = na.omit(x)[!(na.omit(x) %in% fm)]
+    usm <- unique(sm)
+    tabsm <- tabulate(match(sm, usm))
+    usm[tabsm == max(tabsm)]
+  }
+  
+  (DQA.Predictors.Numeric.Summary <- data.frame(
+  Column.Name= names(DQA.Predictors.Numeric), 
+  Column.Type=sapply(DQA.Predictors.Numeric, function(x) class(x)), 
+  Unique.Count=sapply(DQA.Predictors.Numeric, function(x) length(unique(x))),
+  Unique.Count.Ratio=sapply(DQA.Predictors.Numeric, function(x) format(round((length(unique(x))/nrow(DQA.Predictors.Numeric)),3), nsmall=3)),
+  First.Mode.Value=sapply(DQA.Predictors.Numeric, function(x) format(round((FirstModes(x)[1]),3),nsmall=3)),
+  Second.Mode.Value=sapply(DQA.Predictors.Numeric, function(x) format(round((SecondModes(x)[1]),3),nsmall=3)),
+  First.Mode.Count=sapply(DQA.Predictors.Numeric, function(x) sum(na.omit(x) == FirstModes(x)[1])),
+  Second.Mode.Count=sapply(DQA.Predictors.Numeric, function(x) sum(na.omit(x) == SecondModes(x)[1])),
+  First.Second.Mode.Ratio=sapply(DQA.Predictors.Numeric, function(x) format(round((sum(na.omit(x) == FirstModes(x)[1])/sum(na.omit(x) == SecondModes(x)[1])),3), nsmall=3)),
+  Minimum=sapply(DQA.Predictors.Numeric, function(x) format(round(min(x,na.rm = TRUE),3), nsmall=3)),
+  Mean=sapply(DQA.Predictors.Numeric, function(x) format(round(mean(x,na.rm = TRUE),3), nsmall=3)),
+  Median=sapply(DQA.Predictors.Numeric, function(x) format(round(median(x,na.rm = TRUE),3), nsmall=3)),
+  Maximum=sapply(DQA.Predictors.Numeric, function(x) format(round(max(x,na.rm = TRUE),3), nsmall=3)),
+  Skewness=sapply(DQA.Predictors.Numeric, function(x) format(round(moments::skewness(x,na.rm = TRUE),3), nsmall=3)),
+  Kurtosis=sapply(DQA.Predictors.Numeric, function(x) format(round(moments::kurtosis(x,na.rm = TRUE),3), nsmall=3)),
+  Percentile25th=sapply(DQA.Predictors.Numeric, function(x) format(round(quantile(x,probs=0.25,na.rm = TRUE),3), nsmall=3)),
+  Percentile75th=sapply(DQA.Predictors.Numeric, function(x) format(round(quantile(x,probs=0.75,na.rm = TRUE),3), nsmall=3)),
+  row.names=NULL)
+  )  
+  
+}
+
+##################################
+# Identifying potential data quality issues
+##################################
+
+##################################
+# Checking for missing observations
+##################################
+if ((nrow(DQA.Summary[DQA.Summary$NA.Count>0,]))>0){
+  print(paste0("Missing observations noted for ",
+               (nrow(DQA.Summary[DQA.Summary$NA.Count>0,])),
+               " variable(s) with NA.Count>0 and Fill.Rate<1.0."))
+  DQA.Summary[DQA.Summary$NA.Count>0,]
+} else {
+  print("No missing observations noted.")
+}
+
+##################################
+# Checking for zero or near-zero variance predictors
+##################################
+if (length(names(DQA.Predictors.Factor))==0) {
+  print("No factor predictors noted.")
+} else if (nrow(DQA.Predictors.Factor.Summary[as.numeric(as.character(DQA.Predictors.Factor.Summary$First.Second.Mode.Ratio))>5,])>0){
+  print(paste0("Low variance observed for ",
+               (nrow(DQA.Predictors.Factor.Summary[as.numeric(as.character(DQA.Predictors.Factor.Summary$First.Second.Mode.Ratio))>5,])),
+               " factor variable(s) with First.Second.Mode.Ratio>5."))
+  DQA.Predictors.Factor.Summary[as.numeric(as.character(DQA.Predictors.Factor.Summary$First.Second.Mode.Ratio))>5,]
+} else {
+  print("No low variance factor predictors due to high first-second mode ratio noted.")
+}
+
+if (length(names(DQA.Predictors.Numeric))==0) {
+  print("No numeric predictors noted.")
+} else if (nrow(DQA.Predictors.Numeric.Summary[as.numeric(as.character(DQA.Predictors.Numeric.Summary$First.Second.Mode.Ratio))>5,])>0){
+  print(paste0("Low variance observed for ",
+               (nrow(DQA.Predictors.Numeric.Summary[as.numeric(as.character(DQA.Predictors.Numeric.Summary$First.Second.Mode.Ratio))>5,])),
+               " numeric variable(s) with First.Second.Mode.Ratio>5."))
+  DQA.Predictors.Numeric.Summary[as.numeric(as.character(DQA.Predictors.Numeric.Summary$First.Second.Mode.Ratio))>5,]
+} else {
+  print("No low variance numeric predictors due to high first-second mode ratio noted.")
+}
+
+if (length(names(DQA.Predictors.Numeric))==0) {
+  print("No numeric predictors noted.")
+} else if (nrow(DQA.Predictors.Numeric.Summary[as.numeric(as.character(DQA.Predictors.Numeric.Summary$Unique.Count.Ratio))<0.01,])>0){
+  print(paste0("Low variance observed for ",
+               (nrow(DQA.Predictors.Numeric.Summary[as.numeric(as.character(DQA.Predictors.Numeric.Summary$Unique.Count.Ratio))<0.01,])),
+               " numeric variable(s) with Unique.Count.Ratio<0.01."))
+  DQA.Predictors.Numeric.Summary[as.numeric(as.character(DQA.Predictors.Numeric.Summary$Unique.Count.Ratio))<0.01,]
+} else {
+  print("No low variance numeric predictors due to low unique count ratio noted.")
+}
+
+##################################
+# Checking for skewed predictors
+##################################
+if (length(names(DQA.Predictors.Numeric))==0) {
+  print("No numeric predictors noted.")
+} else if (nrow(DQA.Predictors.Numeric.Summary[as.numeric(as.character(DQA.Predictors.Numeric.Summary$Skewness))>3 |
+                                               as.numeric(as.character(DQA.Predictors.Numeric.Summary$Skewness))<(-3),])>0){
+  print(paste0("High skewness observed for ",
+  (nrow(DQA.Predictors.Numeric.Summary[as.numeric(as.character(DQA.Predictors.Numeric.Summary$Skewness))>3 |
+                                               as.numeric(as.character(DQA.Predictors.Numeric.Summary$Skewness))<(-3),])),
+  " numeric variable(s) with Skewness>3 or Skewness<(-3)."))
+  DQA.Predictors.Numeric.Summary[as.numeric(as.character(DQA.Predictors.Numeric.Summary$Skewness))>3 |
+                                 as.numeric(as.character(DQA.Predictors.Numeric.Summary$Skewness))<(-3),]
+} else {
+  print("No skewed numeric predictors noted.")
+}
+
+```
+
+##  1.3 Missing Data Pattern Analysis Summary
+
+### 1.3.1 Assessment using MISSCOMPARE 
+|
+| Missing data pattern assessment:
+|
+| **[A]** The original dataset was reconstructed using the <span style="color: #0000FF">clean</span> method from the <mark style="background-color: #CCECFF">**missCompare**</mark> package.
+| **[A.1]** All observations and variables retained.
+| **[A.1.1]** All variables were within the defined 50% observation fill rate or missingness ratio criterion.
+| **[A.1.2]** All observation were within the defined 80% variable fill rate or missingness ratio criterion.
+| **[A.2]** All 12 factor variables were converted to numeric variables.
+| **[A.3]** All NA labels retained. No NA labels were re-coded.
+|
+| **[B]** The missing data patterns were summarized using the <span style="color: #0000FF">get_data</span> method from the <mark style="background-color: #CCECFF">**missCompare**</mark> package. 
+| **[B.1]** There were 1431/2159 (0.663) observations assessed as complete.
+| **[B.2]** There were 1187/34544 (0.034) instances assessed as missing.
+| **[B.3]** The <span style="color: #FF0000">cisterns</span> variable (factor), <span style="color: #FF0000">shift</span> variable (factor) and <span style="color: #FF0000">hypoxia</span> variable (factor) contributed the most missing data.
+| **[B.4]** There are 59 missing data patterns observed employing various combinations of the 16 variables. 
+| **[B.5]** The missing data patterns are clustered between the following variables:
+| **[B.5.1]** <span style="color: #FF0000">cisterns</span> variable (factor) and <span style="color: #FF0000">shift</span> variable (factor) variables.
+| **[B.5.2]** <span style="color: #FF0000">hb</span> variable (numeric) and <span style="color: #FF0000">glucose</span> variable (numeric) variables.
+| **[B.5.3]** <span style="color: #FF0000">trash</span> variable (factor) and <span style="color: #FF0000">edh</span> variable (factor) variables.
+| **[B.5.4]** <span style="color: #FF0000">hypoxia</span> variable (factor) and <span style="color: #FF0000">hypotens</span> (factor) variables.
+| **[B.5.5]** <span style="color: #FF0000">pupil</span> variable (factor) and <span style="color: #FF0000">ctclass</span> variable (factor) variables.
+| **[B.6]** Thresholding the minimum number of observations per distinct missing data pattern showed different percentages of observations retained:
+| **[B.6.1]** With the minimum number of observations per distinct missing data pattern set to 5, 89% of observations are retained.
+| **[B.6.2]** With the minimum number of observations per distinct missing data pattern set to 10, 81% of observations are retained.
+| **[B.6.3]** With the minimum number of observations per distinct missing data pattern set to 20, 74% of observations are retained.
+|
+```{r section_1.3.1, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+MDPA <- TBI.Analysis
+
+##################################
+# Reconstructing the dataset by :
+# removing variables with fill rate > 0.50
+# removing observations with NA ratio > 0.80
+# converting factor variables to numeric variables
+##################################
+MDPA.Cleaned <- missCompare::clean(MDPA,
+                                   var_removal_threshold=0.50,
+                                   ind_removal_threshold=0.80)
+
+##################################
+# Gathering the metadata using the reconstructed dataset
+##################################
+MDPA.Cleaned.Metadata <- missCompare::get_data(MDPA.Cleaned,
+                                  matrixplot_sort = T,
+                                  plot_transform = T)
+
+##################################
+# Gathering the number of complete cases
+##################################
+MDPA.Cleaned.Metadata$Complete_cases
+MDPA.Cleaned.Metadata$Rows
+MDPA.Cleaned.Metadata$Columns
+MDPA.Cleaned.Metadata$Complete_cases/MDPA.Cleaned.Metadata$Rows
+
+##################################
+# Gathering the number of incomplete cases
+##################################
+MDPA.Cleaned.Metadata$Total_NA
+MDPA.Cleaned.Metadata$NA_per_variable
+MDPA.Cleaned.Metadata$Fraction_missingness
+MDPA.Cleaned.Metadata$Fraction_missingness_per_variable
+
+##################################
+# Gathering the missing data patterns
+##################################
+MDPA.Cleaned.Metadata$Matrix_plot
+MDPA.Cleaned.Metadata$Cluster_plot
+MDPA.Cleaned.Metadata$Corr_matrix
+MDPA.Cleaned.Metadata$MD_Pattern
+dim(MDPA.Cleaned.Metadata$MD_Pattern)
+MDPA.Cleaned.Metadata$NA_Correlations
+MDPA.Cleaned.Metadata$NA_Correlation_plot
+MDPA.Cleaned.Metadata$min_PDM_thresholds
+MDPA.Cleaned.Metadata$Vars_above_half
+```
+
+### 1.3.2 Assessment using RBTEST 
+|
+| Missing data mechanism assessment:
+|
+| **[A]** The missing data mechanisms were summarized using the <span style="color: #0000FF">RBtest</span> method from the <mark style="background-color: #CCECFF">**RBtest**</mark> package. 
+| **[A.1]** Variables assessed with Missing at Random (MAR) mechanism as evaluated against the <span style="color: #FF0000">trial</span> variable (factor), <span style="color: #FF0000">age</span> variable (numeric), <span style="color: #FF0000">motor</span> variable (factor), <span style="color: #FF0000">d.sysbp</span> variable (numeric), <span style="color: #FF0000">unfav</span> variable (factor) and <span style="color: #FF0000">mort</span> variable (factor) with complete observations :
+| **[A.1.1]** <span style="color: #FF0000">hypoxia</span> variable (factor)
+| **[A.1.2]** <span style="color: #FF0000">cisterns</span> variable (factor)
+| **[A.1.3]** <span style="color: #FF0000">ctclass</span> variable (factor)
+| **[A.2]** Variables assessed with Missing Completely at Random (MCAR) mechanism as evaluated against the <span style="color: #FF0000">trial</span> variable (factor), <span style="color: #FF0000">age</span> variable (numeric), <span style="color: #FF0000">motor</span> variable (factor), <span style="color: #FF0000">d.sysbp</span> variable (numeric), <span style="color: #FF0000">unfav</span> variable (factor) and <span style="color: #FF0000">mort</span> variable (factor) with complete observations :
+| **[A.2.1]** <span style="color: #FF0000">hypotens</span> variable (factor)
+| **[A.2.2]** <span style="color: #FF0000">shift</span> variable (factor)
+| **[A.2.3]** <span style="color: #FF0000">tsah</span> variable (factor)
+| **[A.2.4]** <span style="color: #FF0000">edh</span> variable (factor)
+| **[A.2.5]** <span style="color: #FF0000">pupil</span> variable (factor)
+| **[A.2.6]** <span style="color: #FF0000">hb</span> variable (numeric)
+| **[A.2.7]** <span style="color: #FF0000">glucose</span> variable (numeric)
+|
+```{r section_1.3.2, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+MDPA <- TBI.Analysis
+
+##################################
+# Testing the missingness mechanism using a regression-based approach
+# MCAR (Missing Completely at Random) versus MAR (Missing at Random)
+# for variables with missing data as evaluated against variables with complete observations
+##################################
+RBtest(TBI.Analysis)
+
+```
+
+##  1.4 Imputation Method Performance Comparison Summary
+
+### 1.4.1 Evaluation using MISSCOMPARE
+|
+| Missing data imputation method evaluation:
+|
+| **[A]** The performance of 16 missing data imputation methods were evaluated on the simulated dataset using the <span style="color: #0000FF">impute_simulated</span> method from the <mark style="background-color: #CCECFF">**missCompare**</mark> package. 
+| **[A.1]** Method 1: Random replacement
+| **[A.2]** Method 2: Median imputation
+| **[A.3]** Method 3: Mean imputation
+| **[A.4]** Method 4: missMDA Regularized
+| **[A.5]** Method 5: missMDA EM
+| **[A.6]** Method 6:  pcaMethods PPCA
+| **[A.7]** Method 7:  pcaMethods svdImpute
+| **[A.8]** Method 8:  pcaMethods BPCA
+| **[A.9]** Method 9:  pcaMethods NIPALS
+| **[A.10]** Method 10:  pcaMethods NLPCA
+| **[A.11]** Method 11:  mice mixed
+| **[A.12]** Method 12:  mi Bayesian
+| **[A.13]** Method 13:  Amelia II
+| **[A.14]** Method 14:  missForest
+| **[A.15]** Method 15:  Hmisc aregImpute
+| **[A.16]** Method 16:  VIM kNN
+|
+| **[B]** The missing data imputation methods from the <mark style="background-color: #CCECFF">**missMDA**</mark> and <mark style="background-color: #CCECFF">**pcaMethods**</mark> packages had the best MAE and RMSE performance.
+|
+| **[C]** The missing data imputation methods from the <mark style="background-color: #CCECFF">**mice**</mark>, <mark style="background-color: #CCECFF">**mi**</mark>, <mark style="background-color: #CCECFF">**Amelia**</mark>, <mark style="background-color: #CCECFF">**missForest**</mark>, <mark style="background-color: #CCECFF">**Hmisc**</mark> and <mark style="background-color: #CCECFF">**VIM**</mark> packages had the best KS test performance.
+|
+| **[D]** Due to the nature of the dataset containing both numeric and factor variables, the missing data imputation methods from the <mark style="background-color: #CCECFF">**mice**</mark>, <mark style="background-color: #CCECFF">**Hmisc**</mark> and <mark style="background-color: #CCECFF">**VIM**</mark> packages which offer more flexibility for mixed data types were chosen for the subsequent process.
+|
+```{r section_1.4.1, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+MDIE <- TBI.Analysis
+
+##################################
+# Reconstructing the dataset by :
+# removing variables with fill rate > 0.50
+# removing observations with NA ratio > 0.80
+# converting factor variables to numeric variables
+##################################
+MDIE.Cleaned <- missCompare::clean(MDIE,
+                                   var_removal_threshold=0.50,
+                                   ind_removal_threshold=0.80)
+
+##################################
+# Gathering the metadata using the reconstructed dataset
+##################################
+MDIE.Cleaned.Metadata <- missCompare::get_data(MDIE.Cleaned,
+                                  matrixplot_sort = T,
+                                  plot_transform = T)
+
+##################################
+# Simulating a dataset using the metadata characteristics
+# applying MCAR, MAR and MNAR mechanisms
+##################################
+MDIE.Simulated <- missCompare::simulate(rownum=MDIE.Cleaned.Metadata$Rows,
+                                   colnum=MDIE.Cleaned.Metadata$Columns,
+                                   cormat=MDIE.Cleaned.Metadata$Corr_matrix,
+                                   meanval=0,
+                                   sdval=1)
+
+##################################
+# Performing 16 imputation methods
+# on the simulated dataset
+# Method 1 : random replacement
+# Method 2 : median imputation
+# Method 3 : mean imputation
+# Method 4 : missMDA Regularized
+# Method 5 : missMDA EM
+# Method 6 :  pcaMethods PPCA
+# Method 7 :  pcaMethods svdImpute
+# Method 8 :  pcaMethods BPCA
+# Method 9 :  pcaMethods NIPALS
+# Method 10 :  pcaMethods NLPCA
+# Method 11 :  mice mixed
+# Method 12 :  mi Bayesian
+# Method 13 :  Amelia II
+# Method 14 :  missForest
+# Method 15 :  Hmisc aregImpute
+# Method 16 :  VIM kNN
+##################################
+
+##################################
+# Process parameters defined as follows :
+# Minimum number of observations per distinct missing data pattern = 10
+# Number of iterations = 1 (for illustration only, actual number should be set high in real applications)
+##################################
+MDIE.Simulated.Imputed <- missCompare::impute_simulated(rownum=MDIE.Cleaned.Metadata$Rows,
+                                   colnum=MDIE.Cleaned.Metadata$Columns,
+                                   cormat=MDIE.Cleaned.Metadata$Corr_matrix,
+                                   MD_pattern=MDIE.Cleaned.Metadata$MD_Pattern,
+                                   NA_fraction=MDIE.Cleaned.Metadata$Fraction_missingness,
+                                   min_PDM=10,
+                                   n.iter=1,
+                                   assumed_pattern=NA)
+
+##################################
+# Comparing the performance of the 16 imputation methods
+# in terms of the process execution time
+# per missing data mechanism
+##################################
+MDIE.Simulated.Imputed$Plot_TIME
+
+##################################
+# Comparing the performance of the 16 imputation methods
+# in terms of the root mean square error
+# per missing data mechanism
+##################################
+MDIE.Simulated.Imputed$Plot_RMSE
+
+##################################
+# Comparing the performance of the 16 imputation methods
+# in terms of the mean absolute error
+# per missing data mechanism
+##################################
+MDIE.Simulated.Imputed$Plot_MAE
+
+##################################
+# Comparing the performance of the 16 imputation methods
+# in terms of the kolmogorov smirnov statistic
+# per missing data mechanism
+##################################
+MDIE.Simulated.Imputed$Plot_KS
+
+```
+
+##  1.5 Missing Data Imputation and Post-Imputation Diagnostics Summary
+
+### 1.5.1 Imputation using MICE MIXED
+|
+| Missing data imputation method implementation:
+|
+| **[A]** The missing data imputation method from the <mark style="background-color: #CCECFF">**mice**</mark> package as implemented in the <mark style="background-color: #CCECFF">**missCompare**</mark> package showed: 
+| **[A.1]** Relatively poor data plausibility for the numeric variables in the imputed dataset as compared to the original dataset.
+| **[A.2]** Relatively good data plausibility for the categorical variables in the imputed dataset as compared to the original dataset.
+| **[A.3]** Consistent numeric variable clustering in the imputed dataset as compared to the original dataset.
+|
+```{r section_1.5.1, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+MDIPID <- TBI.Analysis
+
+##################################
+# Performing missing data imputation
+# on the original dataset using
+# Method 11 :  mice mixed
+##################################
+##################################
+# Process parameters defined as follows :
+# Number of iterations = 3 (for illustration only, actual number should be set high in real applications)
+##################################
+MDIPID.Imputed.MiceMixed <- missCompare::impute_data(MDIPID,
+                                                     scale=F,
+                                                     n.iter=3,
+                                                     sel_method=c(11))
+
+##################################
+# Performing post-imputation diagnostics
+# using Method 11 :  mice mixed
+##################################
+##################################
+# Process parameters defined as follows :
+# Number of bootstrap cycles = 5 (for illustration only, actual number should be set high in real applications)
+##################################
+MDIPID.Imputed.MiceMixed.Diagnostics <- missCompare::post_imp_diag(MDIPID,
+                                                        MDIPID.Imputed.MiceMixed$mice_mixed_imputation[[1]],
+                                                        scale=F,
+                                                        n.boot=5)                            
+                                                                         
+##################################
+# Comparing the histograms of the numeric variables
+# between the imputed and original datasets
+# from Method 11 :  mice mixed
+##################################
+MDIPID.Imputed.MiceMixed.Diagnostics$Histograms
+
+##################################
+# Comparing the box plots of the numeric variables
+# between the imputed and original datasets
+# from Method 11 :  mice mixed
+##################################
+MDIPID.Imputed.MiceMixed.Diagnostics$Boxplots
+
+##################################
+# Comparing the summary statistics of the numeric variables
+# between the imputed and original datasets
+# from Method 11 :  mice mixed
+##################################
+MDIPID.Imputed.MiceMixed.Diagnostics$Statistics
+
+##################################
+# Comparing the correlation plots of the numeric variables
+# between the imputed and original datasets
+# from Method 11 :  mice mixed
+##################################
+MDIPID.Imputed.MiceMixed.Diagnostics$Correlation_plot
+
+##################################
+# Comparing the bar charts of the numeric variables
+# between the imputed and original datasets
+# from Method 11 :  mice mixed
+##################################
+MDIPID.Imputed.MiceMixed.Diagnostics$Barcharts
+
+##################################
+# Comparing the cluster plot of the variables
+# between the imputed and original datasets
+# from Method 11 :  mice mixed
+###############################
+MDIPID.Imputed.MiceMixed.Diagnostics$Variable_clusters_imp
+MDIPID.Imputed.MiceMixed.Diagnostics$Variable_clusters_orig
+
+```
+
+### 1.5.2 Imputation using HMISC AREGIMPUTE
+|
+| Missing data imputation method implementation:
+|
+| **[A]** The missing data imputation method from the <mark style="background-color: #CCECFF">**Hmisc**</mark> package as implemented in the <mark style="background-color: #CCECFF">**missCompare**</mark> package showed: 
+| **[A.1]** Relatively poor data plausibility for the numeric variables in the imputed dataset as compared to the original dataset.
+| **[A.2]** Relatively good data plausibility for the categorical variables in the imputed dataset as compared to the original dataset.
+| **[A.3]** Consistent numeric variable clustering in the imputed dataset as compared to the original dataset.
+|
+```{r section_1.5.2, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+MDIPID <- TBI.Analysis
+
+##################################
+# Performing missing data imputation
+# on the original dataset using
+# Method 15 :  Hmisc aregImpute
+##################################
+##################################
+# Process parameters defined as follows :
+# Number of iterations = 3 (for illustration only, actual number should be set high in real applications)
+##################################
+MDIPID.Imputed.HmiscAregImpute <- missCompare::impute_data(MDIPID,
+                                                     scale=F,
+                                                     n.iter=3,
+                                                     sel_method=c(15))
+
+##################################
+# Performing post-imputation diagnostics
+# Method 15 :  Hmisc aregImpute
+##################################
+##################################
+# Process parameters defined as follows :
+# Number of bootstrap cycles = 5 (for illustration only, actual number should be set high in real applications)
+##################################
+MDIPID.Imputed.HmiscAregImpute.Diagnostics <- missCompare::post_imp_diag(MDIPID,
+                                                  MDIPID.Imputed.HmiscAregImpute$Hmisc_aregImpute_imputation[[1]],
+                                                  scale=F,
+                                                  n.boot=5)                            
+                                                                         
+##################################
+# Comparing the histograms of the numeric variables
+# between the imputed and original datasets
+# from Method 15 :  Hmisc aregImpute
+##################################
+MDIPID.Imputed.HmiscAregImpute.Diagnostics$Histograms
+
+##################################
+# Comparing the box plots of the numeric variables
+# between the imputed and original datasets
+# from Method 15 :  Hmisc aregImpute
+##################################
+MDIPID.Imputed.HmiscAregImpute.Diagnostics$Boxplots
+
+##################################
+# Comparing the summary statistics of the numeric variables
+# between the imputed and original datasets
+# from Method 15 :  Hmisc aregImpute
+##################################
+MDIPID.Imputed.HmiscAregImpute.Diagnostics$Statistics
+
+##################################
+# Comparing the correlation plots of the numeric variables
+# between the imputed and original datasets
+# from Method 15 :  Hmisc aregImpute
+##################################
+MDIPID.Imputed.HmiscAregImpute.Diagnostics$Correlation_plot
+
+##################################
+# Comparing the bar charts of the numeric variables
+# between the imputed and original datasets
+# from Method 15 :  Hmisc aregImpute
+##################################
+MDIPID.Imputed.HmiscAregImpute.Diagnostics$Barcharts
+
+##################################
+# Comparing the cluster plot of the variables
+# between the imputed and original datasets
+# from Method 15 :  Hmisc aregImpute
+###############################
+MDIPID.Imputed.HmiscAregImpute.Diagnostics$Variable_clusters_imp
+MDIPID.Imputed.HmiscAregImpute.Diagnostics$Variable_clusters_orig
+
+```
+
+### 1.5.3 Imputation using VIM KNN
+|
+| Missing data imputation method implementation:
+|
+| **[A]** The missing data imputation method from the <mark style="background-color: #CCECFF">**VIM**</mark> package as implemented in the <mark style="background-color: #CCECFF">**missCompare**</mark> package showed: 
+| **[A.1]** Relatively good data plausibility for the numeric variables in the imputed dataset as compared to the original dataset.
+| **[A.2]** Relatively poor data plausibility for the categorical variables in the imputed dataset as compared to the original dataset.
+| **[A.3]** Consistent numeric variable clustering in the imputed dataset as compared to the original dataset.
+|
+```{r section_1.5.3, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+MDIPID <- TBI.Analysis
+
+##################################
+# Performing missing data imputation
+# on the original dataset using
+# Method 16 :  VIM kNN
+##################################
+##################################
+# Process parameters defined as follows :
+# Number of iterations = 3 (for illustration only, actual number should be set high in real applications)
+##################################
+MDIPID.Imputed.VIMkNN <- missCompare::impute_data(MDIPID,
+                                                     scale=F,
+                                                     n.iter=3,
+                                                     sel_method=c(16))
+
+##################################
+# Performing post-imputation diagnostics
+# using Method 16 : VIM kNN
+##################################
+##################################
+# Process parameters defined as follows :
+# Number of bootstrap cycles = 5 (for illustration only, actual number should be set high in real applications)
+##################################
+MDIPID.Imputed.VIMkNN.Diagnostics <- missCompare::post_imp_diag(MDIPID,
+                                                        MDIPID.Imputed.VIMkNN$VIM_kNN_imputation[[1]],
+                                                        scale=F,
+                                                        n.boot=5)                            
+                                                                         
+##################################
+# Comparing the histograms of the numeric variables
+# between the imputed and original datasets
+# from Method 16 : VIM kNN
+##################################
+MDIPID.Imputed.VIMkNN.Diagnostics$Histograms
+
+##################################
+# Comparing the box plots of the numeric variables
+# between the imputed and original datasets
+# from Method 16 : VIM kNN
+##################################
+MDIPID.Imputed.VIMkNN.Diagnostics$Boxplots
+
+##################################
+# Comparing the summary statistics of the numeric variables
+# between the imputed and original datasets
+# from Method 16 : VIM kNN
+##################################
+MDIPID.Imputed.VIMkNN.Diagnostics$Statistics
+
+##################################
+# Comparing the correlation plots of the numeric variables
+# between the imputed and original datasets
+# from Method 12 : VIM kNN
+##################################
+MDIPID.Imputed.VIMkNN.Diagnostics$Correlation_plot
+
+##################################
+# Comparing the bar charts of the numeric variables
+# between the imputed and original datasets
+# from Method 16 : VIM kNN
+##################################
+MDIPID.Imputed.VIMkNN.Diagnostics$Barcharts
+
+##################################
+# Comparing the cluster plot of the variables
+# between the imputed and original datasets
+# from Method 16 : VIM kNN
+###############################
+MDIPID.Imputed.VIMkNN.Diagnostics$Variable_clusters_imp
+MDIPID.Imputed.VIMkNN.Diagnostics$Variable_clusters_orig
+
+```
+
+# **2. References**
+|
+| **[Book]** [Clinical Prediction Models](http://clinicalpredictionmodels.org/) by Ewout Steyerberg
+| **[Book]** [Flexible Imputation of Missing Data](https://stefvanbuuren.name/fimd/) by Stef van Buuren
+| **[R Package]** [mice](https://www.gerkovink.com/miceVignettes/) by Gerko Vink and Stef van Buuren
+| **[R Package]** [miceRanger](https://cran.r-project.org/web/packages/miceRanger/vignettes/miceAlgorithm.html) by Sam Wilson
+| **[R Package]** [missMDA](http://factominer.free.fr/missMDA/appendix_These_Audigier.pdf) by Vincent Audigier
+| **[R Package]** [VIM](https://cran.r-project.org/web/packages/VIM/vignettes/VIM.html) by Matthias Templ
+| **[R Package]** [Amelia](https://cran.r-project.org/web/packages/Amelia/index.html) by James Honaker, Gary King and Matthew Blackwell
+| **[R Package]** [pcaMethods](https://bioconductor.org/packages/release/bioc/manuals/pcaMethods/man/pcaMethods.pdf) by Wolfram Stacklies, Henning Redestig and Kevin Wright
+| **[R Package]** [mi](https://cran.r-project.org/web/packages/mi/index.html) by Jon Kropko
+| **[R Package]** [missForest](https://cran.r-project.org/web/packages/missForest/index.html) by Daniel Stekhoven
+| **[R Package]** [Hmisc](https://cran.r-project.org/web/packages/Hmisc/) by Frank Harrell  
+| **[R Package]** [RBtest](https://cran.microsoft.com/snapshot/2022-02-28/web/packages/RBtest/index.html) by Serguei Rouzinov and Andre Berchtold
+| **[R Package]** [Caret](https://topepo.github.io/caret/pre-processing.html#imputation) by Max Kuhn
+| **[Article]** [Imputing Missing Data with R; MICE package](https://datascienceplus.com/imputing-missing-data-with-r-mice-package/#:~:text=The%20mice%20package%20in%20R%2C%20helps%20you%20imputing,using%20a%20the%20airquality%20dataset%20%28available%20in%20R%29.) by Michy Alice
+| **[Article]** [How Do I Perform Multiple Imputation Using Predictive Mean Matching In R?](https://stats.oarc.ucla.edu/r/faq/how-do-i-perform-multiple-imputation-using-predictive-mean-matching-in-r/) by UCLA Advanced Research Computing Group
+| **[Article]** [A Solution to Missing Data: Imputation Using R](https://www.kdnuggets.com/2017/09/missing-data-imputation-using-r.html) by Chaitanya Sagar
+| **[Article]** [Predictive Mean Matching Imputation (Theory & Example in R)](https://statisticsglobe.com/predictive-mean-matching-imputation-method/) by Joachim Schork
+|
+|
+|
+|
+|
