@@ -423,8 +423,8 @@ if (length(names(DQA.Predictors.Numeric))==0) {
 |      **[A.1]** All observations and variables retained.
 |             **[A.1.1]** All variables were within the defined 50% observation fill rate or missingness ratio criterion.
 |             **[A.1.2]** All observation were within the defined 80% variable fill rate or missingness ratio criterion.
-|             **[A.2]** All 12 factor variables were converted to numeric variables.
-|             **[A.3]** All NA labels retained. No NA labels were re-coded.
+|      **[A.2]** All 12 factor variables were converted to numeric variables.
+|      **[A.3]** All NA labels retained. No NA labels were re-coded.
 |
 | **[B]** The missing data patterns were summarized using the <span style="color: #0000FF">get_data</span> method from the <mark style="background-color: #CCECFF">**missCompare**</mark> package. 
 |      **[B.1]** There were 1431/2159 (0.663) observations assessed as complete.
@@ -438,9 +438,9 @@ if (length(names(DQA.Predictors.Numeric))==0) {
 |             **[B.5.4]** <span style="color: #FF0000">hypoxia</span> variable (factor) and <span style="color: #FF0000">hypotens</span> (factor) variables.
 |             **[B.5.5]** <span style="color: #FF0000">pupil</span> variable (factor) and <span style="color: #FF0000">ctclass</span> variable (factor) variables.
 |      **[B.6]** Thresholding the minimum number of observations per distinct missing data pattern showed different percentages of observations retained:
-|            **[B.6.1]** With the minimum number of observations per distinct missing data pattern set to 5, 89% of observations are retained.
-|            **[B.6.2]** With the minimum number of observations per distinct missing data pattern set to 10, 81% of observations are retained.
-|            **[B.6.3]** With the minimum number of observations per distinct missing data pattern set to 20, 74% of observations are retained.
+|             **[B.6.1]** With the minimum number of observations per distinct missing data pattern set to 5, 89% of observations are retained.
+|             **[B.6.2]** With the minimum number of observations per distinct missing data pattern set to 10, 81% of observations are retained.
+|             **[B.6.3]** With the minimum number of observations per distinct missing data pattern set to 20, 74% of observations are retained.
 |
 ```{r section_1.3.1, warning=FALSE, message=FALSE}
 ##################################
