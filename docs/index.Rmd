@@ -923,6 +923,7 @@ MDIPID.Imputed.VIMkNN.Diagnostics$Variable_clusters_orig
 |
 | **[Book]** [Clinical Prediction Models](http://clinicalpredictionmodels.org/) by Ewout Steyerberg
 | **[Book]** [Flexible Imputation of Missing Data](https://stefvanbuuren.name/fimd/) by Stef van Buuren
+| **[Book]** [Introduction to Regression Methods for Public Health Using R](https://bookdown.org/rwnahhas/RMPH/) by Ramzi Nahhas
 | **[R Package]** [mice](https://www.gerkovink.com/miceVignettes/) by Gerko Vink and Stef van Buuren
 | **[R Package]** [miceRanger](https://cran.r-project.org/web/packages/miceRanger/vignettes/miceAlgorithm.html) by Sam Wilson
 | **[R Package]** [missMDA](http://factominer.free.fr/missMDA/appendix_These_Audigier.pdf) by Vincent Audigier
@@ -938,6 +939,32 @@ MDIPID.Imputed.VIMkNN.Diagnostics$Variable_clusters_orig
 | **[Article]** [How Do I Perform Multiple Imputation Using Predictive Mean Matching In R?](https://stats.oarc.ucla.edu/r/faq/how-do-i-perform-multiple-imputation-using-predictive-mean-matching-in-r/) by UCLA Advanced Research Computing Group
 | **[Article]** [A Solution to Missing Data: Imputation Using R](https://www.kdnuggets.com/2017/09/missing-data-imputation-using-r.html) by Chaitanya Sagar
 | **[Article]** [Predictive Mean Matching Imputation (Theory & Example in R)](https://statisticsglobe.com/predictive-mean-matching-imputation-method/) by Joachim Schork
+| **[Article]** [Imputation of Missing Values](https://scikit-learn.org/stable/modules/impute.html) by Scikit-Learn Team
+| **[Article]** [Imputation in R: Top 3 Ways for Imputing Missing Data](https://www.r-bloggers.com/2023/01/imputation-in-r-top-3-ways-for-imputing-missing-data/) by Dario Radecic
+| **[Article]** [Data Imputation Techniques – An Introduction](https://digitaltesseract.com/data-imputation-techniques-an-introduction/) by Suraj RP
+| **[Article]** [Missing Data Imputation Techniques in Machine Learning](https://vitalflux.com/missing-data-imputation-machine-learning/) by Ajitesh Kumar
+| **[Article]** [Types of Missing Data : MCAR, MAR, MNAR](https://wildestimagination.dev/blog/types-of-missing-data-mcar-mar-mnar/) by Nayan
+| **[Article]** [The NIPALS Algorithm](https://kwstat.github.io/nipals/articles/nipals_algorithm.html#:~:text=The%20NIPALS%20%28Nonlinear%20Iterative%20Partial%20Least%20Squares%29%20algorithm,rows%20of%20P%20%E2%80%B2%29%20are%20called%20the%20loadings.) by Kevin Wright
+| **[Article]** [Missing Values](http://mixomics.org/methods/missing-values/#:~:text=If%20missing%20values%20need%20to%20be%20imputed%2C%20the,estimated%20values%20where%20the%20missing%20values%20were%20previously.) by mixOmics Team
+| **[Article]** [The MICE Algorithm](https://cran.r-project.org/web/packages/miceRanger/vignettes/miceAlgorithm.html) by Sam Wilson
+| **[Article]** [Nonlinear PCA Algorithm](http://nlpca.org/) by Matthias Scholz
+| **[Article]** [MICE Algorithm to Impute Missing Values in a Dataset](https://www.numpyninja.com/post/mice-algorithm-to-impute-missing-values-in-a-dataset) by Bhuvaneswari Gopalan
+| **[Article]** [Multivariate Imputation by Chained Equations](https://amices.org/mice/) by AMICES Team
+| **[Article]** [Amelia II: A Program for Missing Data](https://gking.harvard.edu/amelia) by James Honaker, Gary King and Matthew Blackwell
+| **[Article]** [Using Amelia](https://cran.r-project.org/web/packages/Amelia/vignettes/using-amelia.html) by James Honaker, Gary King and Matthew Blackwell
+| **[Article]** [Missing Data | Types, Explanation, & Imputation](https://www.scribbr.com/statistics/missing-data/) by Pritha Bhandari
+| **[Article]** [Estimating Missing Data with aregImpute()](https://www.r-bloggers.com/2010/04/estimating-missing-data-with-aregimpute-r/) by R-Bloggers Team
+| **[Article]** [Multiple Imputation using Additive Regression, Bootstrapping, and Predictive Mean Matching](http://math.furman.edu/~dcs/courses/math47/R/library/Hmisc/html/aregImpute.html) by Frank Harrell
+| **[Article]** [The KNN Algorithm – Explanation, Opportunities, Limitations](https://neptune.ai/blog/knn-algorithm-explanation-opportunities-limitations) by Aymane Hachcham
+| **[Article]** [A Guide To KNN Imputation For Handling Missing Values](https://www.starttechacademy.com/a-guide-to-knn-imputation-for-handling-missing-values/) by Start-Tech Academy Team
+| **[Article]** [kNN Imputation for Missing Values in Machine Learning](https://www.aiproblog.com/index.php/2020/06/23/knn-imputation-for-missing-values-in-machine-learning/) by Charles Durfee
+| **[Article]** [All About Random Forests And handling Missing Values In Them](https://www.numpyninja.com/post/all-about-random-forests-and-handling-missing-values-in-them) by Manju Hariashok
+| **[Article]** [How to Use Python and MissForest Algorithm to Impute Missing Data](https://betterdatascience.com/python-missforest-algorithm/) by Better Data Science Team
+| **[Article]** [Bayesian PCA Missing Value Estimator for MATLAB](http://ishiilab.jp/member/oba/tools/BPCAFill.html) by Shigeyuki Oba
+| **[Article]** [Imputing Missing values with SVD](https://cmdlinetips.com/2022/10/imputing-missing-values-with-svd/) by CMDLineTips Team
+| **[Article]** [EM Imputation and Missing Data: Is Mean Imputation Really So Terrible?](https://www.theanalysisfactor.com/em-imputation-and-missing-data-is-mean-imputation-really-so-terrible/) by Karen Grace-Martin
+| **[Publication]** [Non-Linear PCA: A Missing Data Approach](https://academic.oup.com/bioinformatics/article/21/20/3887/203126?login=false) by Matthias Scholz (Bioinformatics)
+| **[Publication]** [Random Forest Missing Data Algorithms](https://onlinelibrary.wiley.com/doi/10.1002/sam.11348) by Fei Tang and Hemant Ishwaran (ASA Data Science Journal)
 |
 |
 |
