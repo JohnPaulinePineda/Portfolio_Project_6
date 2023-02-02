@@ -957,11 +957,11 @@ MDIPID.Imputed.VIMkNN.Diagnostics$Variable_clusters_orig
 | **[Article]** [Multiple Imputation using Additive Regression, Bootstrapping, and Predictive Mean Matching](http://math.furman.edu/~dcs/courses/math47/R/library/Hmisc/html/aregImpute.html) by Frank Harrell
 | **[Article]** [The KNN Algorithm – Explanation, Opportunities, Limitations](https://neptune.ai/blog/knn-algorithm-explanation-opportunities-limitations) by Aymane Hachcham
 | **[Article]** [A Guide To KNN Imputation For Handling Missing Values](https://www.starttechacademy.com/a-guide-to-knn-imputation-for-handling-missing-values/) by Start-Tech Academy Team
-| **[Article]** [kNN Imputation for Missing Values in Machine Learning](https://www.aiproblog.com/index.php/2020/06/23/knn-imputation-for-missing-values-in-machine-learning/) by Charles Durfee
-| **[Article]** [All About Random Forests And handling Missing Values In Them](https://www.numpyninja.com/post/all-about-random-forests-and-handling-missing-values-in-them) by Manju Hariashok
+| **[Article]** [KNN Imputation for Missing Values in Machine Learning](https://www.aiproblog.com/index.php/2020/06/23/knn-imputation-for-missing-values-in-machine-learning/) by Charles Durfee
+| **[Article]** [All About Random Forests And Handling Missing Values In Them](https://www.numpyninja.com/post/all-about-random-forests-and-handling-missing-values-in-them) by Manju Hariashok
 | **[Article]** [How to Use Python and MissForest Algorithm to Impute Missing Data](https://betterdatascience.com/python-missforest-algorithm/) by Better Data Science Team
 | **[Article]** [Bayesian PCA Missing Value Estimator for MATLAB](http://ishiilab.jp/member/oba/tools/BPCAFill.html) by Shigeyuki Oba
-| **[Article]** [Imputing Missing values with SVD](https://cmdlinetips.com/2022/10/imputing-missing-values-with-svd/) by CMDLineTips Team
+| **[Article]** [Imputing Missing Values with SVD](https://cmdlinetips.com/2022/10/imputing-missing-values-with-svd/) by CMDLineTips Team
 | **[Article]** [EM Imputation and Missing Data: Is Mean Imputation Really So Terrible?](https://www.theanalysisfactor.com/em-imputation-and-missing-data-is-mean-imputation-really-so-terrible/) by Karen Grace-Martin
 | **[Publication]** [Non-Linear PCA: A Missing Data Approach](https://academic.oup.com/bioinformatics/article/21/20/3887/203126?login=false) by Matthias Scholz (Bioinformatics)
 | **[Publication]** [Random Forest Missing Data Algorithms](https://onlinelibrary.wiley.com/doi/10.1002/sam.11348) by Fei Tang and Hemant Ishwaran (ASA Data Science Journal)
