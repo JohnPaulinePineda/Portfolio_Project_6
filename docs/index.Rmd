@@ -18,6 +18,8 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |
 | This document presents a non-exhaustive list of procedures on missing data pattern analysis, imputation method evaluation and post imputation diagnostics using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>.    
 |
+| Missing data refer to instances of observations intended to be collected but did not, which reduce the representativeness of the sample. Depending on how missing data occurred, it introduces bias into the statistical estimates and leads to inefficient data analysis. Imputation refers to the replacement of missing data with another value based on a reasonable estimate. Imputation algorithms applied in this study (mostly contained in the <mark style="background-color: #CCECFF">**missCompare**</mark>, <mark style="background-color: #CCECFF">**mi**</mark>, <mark style="background-color: #CCECFF">**mice**</mark>, <mark style="background-color: #CCECFF">**missForest**</mark>, <mark style="background-color: #CCECFF">**missMDA**</mark> and <mark style="background-color: #CCECFF">**pcaMethods**</mark> packages) attempt to perform a valid analysis for different missingness mechanisms with the objective of completing the dataset while maintaining its true underlying distribution and  multivariate associations.
+|
 ##  1.1 Sample Data
 |
 | The <mark style="background-color: #EEEEEE;color: #FF0000">**Traumatic Brain Injury**</mark>  dataset from the book  <mark style="background-color: #CCECFF">**Clinical Prediction Models**</mark> was used for this illustrated example.
