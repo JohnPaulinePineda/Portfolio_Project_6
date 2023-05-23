@@ -534,6 +534,8 @@ RBtest(TBI.Analysis)
 
 ### 1.4.1 Evaluation using MISSCOMPARE
 |
+| [Multivariate Imputation by Chained Equations](https://journals.sagepub.com/doi/10.1177/0962280206074463) as an imputation method is based on fully conditional specification, where each incomplete variable is imputed by a separate model. As a sequential regression imputation technique, the algorithm imputes an incomplete column (target column) by generating plausible synthetic values given other columns in the data. Each incomplete column must act as a target column, and has its own specific set of predictors. For predictors that are incomplete themselves, the most recently generated imputations are used to complete the predictors prior to prior to imputation of the target columns.
+|
 | Missing data imputation method evaluation:
 |
 | **[A]** The performance of 16 missing data imputation methods were evaluated on the simulated dataset using the <span style="color: #0000FF">impute_simulated</span> method from the <mark style="background-color: #CCECFF">**missCompare**</mark> package. 
@@ -965,6 +967,7 @@ MDIPID.Imputed.VIMkNN.Diagnostics$Variable_clusters_orig
 | **[Article]** [Bayesian PCA Missing Value Estimator for MATLAB](http://ishiilab.jp/member/oba/tools/BPCAFill.html) by Shigeyuki Oba
 | **[Article]** [Imputing Missing Values with SVD](https://cmdlinetips.com/2022/10/imputing-missing-values-with-svd/) by CMDLineTips Team
 | **[Article]** [EM Imputation and Missing Data: Is Mean Imputation Really So Terrible?](https://www.theanalysisfactor.com/em-imputation-and-missing-data-is-mean-imputation-really-so-terrible/) by Karen Grace-Martin
+| **[Publication]** [Multiple Imputation of Discrete and Continuous Data by Fully Conditional Specification](https://journals.sagepub.com/doi/10.1177/0962280206074463) by Stef van Buuren (Statistical Methods in Medical Research)
 | **[Publication]** [Non-Linear PCA: A Missing Data Approach](https://academic.oup.com/bioinformatics/article/21/20/3887/203126?login=false) by Matthias Scholz (Bioinformatics)
 | **[Publication]** [Random Forest Missing Data Algorithms](https://onlinelibrary.wiley.com/doi/10.1002/sam.11348) by Fei Tang and Hemant Ishwaran (ASA Data Science Journal)
 |
