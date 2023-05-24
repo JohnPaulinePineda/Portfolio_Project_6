@@ -534,7 +534,9 @@ RBtest(TBI.Analysis)
 
 ### 1.4.1 Evaluation using MISSCOMPARE
 |
-| [Mean or Median Imputation](https://stefvanbuuren.name/fimd/) replaces missing value with the sample mean or median depending on the distribution of the data. This method is a fast and simple fix for the missing data. However, it will change the distributional shape, underestimate the variance, disturb the relations between variables, bias almost any estimate other than the mean or median and bias the estimate of the mean or median when data are not missing completely at random, especially when the missing values are large in number. This method can be slightly improved by stratifying data into subgroups.
+| [Random Replacement](https://cran.r-project.org/web/packages/missCompare/missCompare.pdf) replaces missing values with random instances from the the data. This method is typically used as a baseline method from which other imputations methods are compared with, but may not be appropriate to be applied in practice due to its inability to take into account any patterns or relationships in the data that may exist between the variable with missing values and other variables in the dataset. This can lead to imputed values that do not reflect the true values of the missing data driving unstable and inaccurate estimates of relationships between variable.
+|
+| [Median / Mean Imptutation](https://stefvanbuuren.name/fimd/) replaces missing value with the sample median / mean depending on the distribution of the data. This method is a fast and simple fix for the missing data. However, it will change the distributional shape, underestimate the variance, disturb the relations between variables, bias almost any estimate other than the median / mean and bias the estimate of the median / mean when data are not missing completely at random, especially when the missing values are large in number. This method can be slightly improved by stratifying data into subgroups.
 |
 | [Multivariate Imputation by Chained Equations](https://journals.sagepub.com/doi/10.1177/0962280206074463) as an imputation method is based on fully conditional specification, where each incomplete variable is imputed by a separate model. As a sequential regression imputation technique, the algorithm imputes an incomplete column (target column) by generating plausible synthetic values given other columns in the data. Each incomplete column must act as a target column, and has its own specific set of predictors. For predictors that are incomplete themselves, the most recently generated imputations are used to complete the predictors prior to prior to imputation of the target columns.
 |
@@ -932,6 +934,7 @@ MDIPID.Imputed.VIMkNN.Diagnostics$Variable_clusters_orig
 | **[Book]** [Clinical Prediction Models](http://clinicalpredictionmodels.org/) by Ewout Steyerberg
 | **[Book]** [Flexible Imputation of Missing Data](https://stefvanbuuren.name/fimd/) by Stef van Buuren
 | **[Book]** [Introduction to Regression Methods for Public Health Using R](https://bookdown.org/rwnahhas/RMPH/) by Ramzi Nahhas
+| **[R Package]** [missCompare](https://cran.r-project.org/web/packages/missCompare/missCompare.pdf) by Tibor Varga
 | **[R Package]** [mice](https://www.gerkovink.com/miceVignettes/) by Gerko Vink and Stef van Buuren
 | **[R Package]** [miceRanger](https://cran.r-project.org/web/packages/miceRanger/vignettes/miceAlgorithm.html) by Sam Wilson
 | **[R Package]** [missMDA](http://factominer.free.fr/missMDA/appendix_These_Audigier.pdf) by Vincent Audigier
@@ -944,6 +947,7 @@ MDIPID.Imputed.VIMkNN.Diagnostics$Variable_clusters_orig
 | **[R Package]** [RBtest](https://cran.microsoft.com/snapshot/2022-02-28/web/packages/RBtest/index.html) by Serguei Rouzinov and Andre Berchtold
 | **[R Package]** [Caret](https://topepo.github.io/caret/pre-processing.html#imputation) by Max Kuhn
 | **[Article]** [Imputing Missing Data with R; MICE package](https://datascienceplus.com/imputing-missing-data-with-r-mice-package/#:~:text=The%20mice%20package%20in%20R%2C%20helps%20you%20imputing,using%20a%20the%20airquality%20dataset%20%28available%20in%20R%29.) by Michy Alice
+| **[Article]** [A Complete Tutorial to missCompare](https://cran.r-project.org/web/packages/missCompare/vignettes/misscompare.html) by Tibor Varga
 | **[Article]** [How Do I Perform Multiple Imputation Using Predictive Mean Matching In R?](https://stats.oarc.ucla.edu/r/faq/how-do-i-perform-multiple-imputation-using-predictive-mean-matching-in-r/) by UCLA Advanced Research Computing Group
 | **[Article]** [A Solution to Missing Data: Imputation Using R](https://www.kdnuggets.com/2017/09/missing-data-imputation-using-r.html) by Chaitanya Sagar
 | **[Article]** [Predictive Mean Matching Imputation (Theory & Example in R)](https://statisticsglobe.com/predictive-mean-matching-imputation-method/) by Joachim Schork
