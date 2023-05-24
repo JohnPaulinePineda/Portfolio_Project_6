@@ -534,6 +534,8 @@ RBtest(TBI.Analysis)
 
 ### 1.4.1 Evaluation using MISSCOMPARE
 |
+| [Mean or Median Imputation](https://stefvanbuuren.name/fimd/) replaces missing value with the sample mean or median depending on the distribution of the data. This method is a fast and simple fix for the missing data. However, it will change the distributional shape, underestimate the variance, disturb the relations between variables, bias almost any estimate other than the mean or median and bias the estimate of the mean or median when data are not missing completely at random, especially when the missing values are large in number. This method can be slightly improved by stratifying data into subgroups.
+|
 | [Multivariate Imputation by Chained Equations](https://journals.sagepub.com/doi/10.1177/0962280206074463) as an imputation method is based on fully conditional specification, where each incomplete variable is imputed by a separate model. As a sequential regression imputation technique, the algorithm imputes an incomplete column (target column) by generating plausible synthetic values given other columns in the data. Each incomplete column must act as a target column, and has its own specific set of predictors. For predictors that are incomplete themselves, the most recently generated imputations are used to complete the predictors prior to prior to imputation of the target columns.
 |
 | Missing data imputation method evaluation:
@@ -663,6 +665,8 @@ MDIE.Simulated.Imputed$Plot_KS
 ##  1.5 Missing Data Imputation and Post-Imputation Diagnostics Summary
 
 ### 1.5.1 Imputation using MICE MIXED
+|
+| [Multivariate Imputation by Chained Equations](https://journals.sagepub.com/doi/10.1177/0962280206074463) as an imputation method is based on fully conditional specification, where each incomplete variable is imputed by a separate model. As a sequential regression imputation technique, the algorithm imputes an incomplete column (target column) by generating plausible synthetic values given other columns in the data. Each incomplete column must act as a target column, and has its own specific set of predictors. For predictors that are incomplete themselves, the most recently generated imputations are used to complete the predictors prior to prior to imputation of the target columns.
 |
 | Missing data imputation method implementation:
 |
