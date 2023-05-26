@@ -986,7 +986,11 @@ MDIPID.Imputed.VIMkNN.Diagnostics$Variable_clusters_orig
 | **[Publication]** [Soft Modelling by Latent Variables: The Non-Linear Iterative Partial Least Squares (NIPALS) Approach](https://www.semanticscholar.org/paper/Soft-Modelling-by-Latent-Variables:-The-Non-Linear-Wold/1e00489e4a9b40e824655b0283ac5a347fe50d73) by Herman Wold (Journal of Applied Probability)
 | **[Publication]** [Non-Linear PCA: A Missing Data Approach](https://www.semanticscholar.org/paper/Non-linear-PCA%3A-a-missing-data-approach-Scholz-Kaplan/61adfc005eb0421c64a1d077810a8dbb86c0f217) by Matthias Scholz, Fatma Kaplan, Charles Guy, Joachim Kopka, Joachim Selbig (Bioinformatics)
 | **[Publication]** [Multiple Imputation of Discrete and Continuous Data by Fully Conditional Specification](https://journals.sagepub.com/doi/10.1177/0962280206074463) by Stef van Buuren (Statistical Methods in Medical Research)
+| **[Publication]** [Amelia II: A Program for Missing Data](https://www.semanticscholar.org/paper/Amelia-II%3A-A-Program-for-Missing-Data-Honaker-King/bf1ee22af84f7fab614ce9a258d04165eec88f23) by James Honaker, Gary King, and Matthew Blackwell (Journal of Statistical Software)
+| **[Publication]** [MissForest — Non-Parametric Missing Value Imputation for Mixed-Type Data](https://academic.oup.com/bioinformatics/article/28/1/112/219101?login=false) by Daniel Stekhoven and Peter Bühlmann (Bioinformatics)
 | **[Publication]** [Random Forest Missing Data Algorithms](https://onlinelibrary.wiley.com/doi/10.1002/sam.11348) by Fei Tang and Hemant Ishwaran (ASA Data Science Journal)
+| **[Publication]** [Robust Likelihood-Based Analysis of Multivariate Data with Missing Values](https://www.jstor.org/stable/24307424) by Roderick Little and Hyonggin An (Statistica Sinica)
+| **[Publication]** [Imputation with the R Package VIM](https://www.jstatsoft.org/article/view/v074i07#:~:text=Title%3A%20Imputation%20with%20the%20R%20Package%20VIM.%20Abstract%3A,verify%20the%20imputation%20process%20using%20visualization%20tools%2C%20) by Alexander Kowarik and Matthias Templ (Journal of Statistical Software)
 |
 |
 |
