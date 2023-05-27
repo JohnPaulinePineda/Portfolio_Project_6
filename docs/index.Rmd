@@ -544,7 +544,9 @@ RBtest(TBI.Analysis)
 |
 | [Probabilistic Principal Component Analysis Imputation](https://www.semanticscholar.org/paper/EM-Algorithms-for-PCA-and-SPCA-Roweis/f9cf9b6291aded2a82652002511aea36b6c5057c#citing-papers) combines an expectation-maximization (EM) approach for principal component analysis (PCA) with a probabilistic model. The EM approach is based on the assumption that the latent variables as well as the noise are normally distributed. In standard PCA data which is far from the training set but close to the principal subspace may have the same reconstruction error. The PPCA algorithm defines a likelihood function such that the likelihood for data far from the training set is much lower, even if they are close to the principal subspace. This allows to improve the estimation accuracy.
 |
-| [Singular Value Decomposition Imputation](https://academic.oup.com/bioinformatics/article/17/6/520/272365?login=false) details.
+| [Singular Value Decomposition Imputation](https://academic.oup.com/bioinformatics/article/17/6/520/272365?login=false) estimates the missing values as a linear combination of a number of most significant eigengenes. As SVD can only be performed on complete matrices, all missing values are initially replaced by 0. The algorithm works iteratively until the change in the estimated solution falls below a certain threshold. For each step, the eigengenes of the current estimate are calculated and used to determine a new estimate. Eigengenes denote the loadings if PCA is performed considering variable as observations. An optimal linear combination is found by regressing the incomplete variable against the number of most significant eigengenes. If the value at a certain position is missing, the corresponding value of the eigengenes is not used when determining the regression coefficients.
+
+.
 |
 | [Bayesian Principal Component Analysis Imputation](https://academic.oup.com/bioinformatics/article/19/16/2088/242445?login=false) details.
 |
