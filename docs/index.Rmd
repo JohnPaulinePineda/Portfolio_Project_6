@@ -542,6 +542,16 @@ RBtest(TBI.Analysis)
 |
 | [Regularized Iterative Principal Component Imputation](https://www.semanticscholar.org/paper/Handling-missing-values-in-exploratory-multivariate-Josse-Husson/e39a06ef08b19dda5f80f15844e9d705986b872b) applies regularization methods to the iterative principal component analysis algorithm to address the potential issue of overfitting. The imputation is carried out by simultaneously taking into account the similarities among individuals and relationships between variables. The algorithm involves setting the missing elements at initial values, conducting principal component methods on the imputed data set and filling in the missing values with the reconstruction formula using a predefined number of dimensions. All parameter estimation steps via principal components and missing value imputation using the fitted matrix are then iterated until convergence.
 |
+| [Probabilistic Principal Component Analysis Imputation](https://www.semanticscholar.org/paper/EM-Algorithms-for-PCA-and-SPCA-Roweis/f9cf9b6291aded2a82652002511aea36b6c5057c#citing-papers) combines an expectation-maximization (EM) approach for principal component analysis (PCA) with a probabilistic model. The EM approach is based on the assumption that the latent variables as well as the noise are normally distributed. In standard PCA data which is far from the training set but close to the principal subspace may have the same reconstruction error. The PPCA algorithm defines a likelihood function such that the likelihood for data far from the training set is much lower, even if they are close to the principal subspace. This allows to improve the estimation accuracy.
+|
+| [Singular Value Decomposition Imputation](https://academic.oup.com/bioinformatics/article/17/6/520/272365?login=false) details.
+|
+| [Bayesian Principal Component Analysis Imputation](https://academic.oup.com/bioinformatics/article/19/16/2088/242445?login=false) details.
+|
+| [Non-Linear Iterative Partial Least Squares](https://www.semanticscholar.org/paper/Soft-Modelling-by-Latent-Variables:-The-Non-Linear-Wold/1e00489e4a9b40e824655b0283ac5a347fe50d73) details.
+|
+| [Non-Linear Principal Component Analysis Imputation](https://www.semanticscholar.org/paper/Non-linear-PCA%3A-a-missing-data-approach-Scholz-Kaplan/61adfc005eb0421c64a1d077810a8dbb86c0f217) details.
+|
 | [Multivariate Imputation by Chained Equations](https://journals.sagepub.com/doi/10.1177/0962280206074463) as an imputation method is based on fully conditional specification, where each incomplete variable is imputed by a separate model. As a sequential regression imputation technique, the algorithm imputes an incomplete column (target column) by generating plausible synthetic values given other columns in the data. Each incomplete column must act as a target column, and has its own specific set of predictors. For predictors that are incomplete themselves, the most recently generated imputations are used to complete the predictors prior to prior to imputation of the target columns.
 |
 | Missing data imputation method evaluation:
