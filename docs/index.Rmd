@@ -554,6 +554,8 @@ RBtest(TBI.Analysis)
 |
 | [Multivariate Imputation by Chained Equations](https://journals.sagepub.com/doi/10.1177/0962280206074463) as an imputation method is based on fully conditional specification, where each incomplete variable is imputed by a separate model. As a sequential regression imputation technique, the algorithm imputes an incomplete column (target column) by generating plausible synthetic values given other columns in the data. Each incomplete column must act as a target column, and has its own specific set of predictors. For predictors that are incomplete themselves, the most recently generated imputations are used to complete the predictors prior to prior to imputation of the target columns.
 |
+| [Iterative Multiple Imputation from Conditional Distributions](https://cran.r-project.org/web/packages/mi/mi.pdf) performs multiple imputation for data with missing values by iteratively drawing imputed values from the conditional distribution for each variable given the observed and imputed values of the other variables in the data. The process approximates a Bayesian framework where multiple chains are run and convergence is assessed after a pre-specified number of iterations within each chain.
+|
 | Missing data imputation method evaluation:
 |
 | **[A]** The performance of 16 missing data imputation methods were evaluated on the simulated dataset using the <span style="color: #0000FF">impute_simulated</span> method from the <mark style="background-color: #CCECFF">**missCompare**</mark> package. 
