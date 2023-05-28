@@ -560,6 +560,10 @@ RBtest(TBI.Analysis)
 |
 | [Non-Parametric Missing Value Imputation Using Random Forest](https://onlinelibrary.wiley.com/doi/10.1002/sam.11348) imputes missing values particularly in the case of mixed-type data such as continuous and/or categorical data including complex interactions and nonlinear relations. The algorithm yields an out-of-bag (OOB) imputation error estimate. After each iteration the difference between the previous and the new imputed data matrix is assessed for the continuous and categorical parts. The stopping criterion is defined such that the imputation process is stopped as soon as both differences have become larger once. In case of only one type of variable the computation stops as soon as the corresponding difference goes up for the first time.
 |
+| [AREG : Multiple Imputation using Additive Regression, Bootstrapping, and Predictive Mean Matching](https://www.jstor.org/stable/24307424) creates flexible additive imputation models by taking all aspects of uncertainty in the imputations into account by using the bootstrap to approximate the process of drawing predicted values from a full Bayesian predictive distribution. Different bootstrap resamples are used for each of the multiple imputations, a flexible additive model is fitted on a sample with replacement from the original data and this model is used to predict all of the original missing and non-missing values for the target variable.
+|
+| [K-Nearest Neighbors Imputation](https://www.jstatsoft.org/article/view/v074i07#:~:text=Title%3A%20Imputation%20with%20the%20R%20Package%20VIM.%20Abstract%3A,verify%20the%20imputation%20process%20using%20visualization%20tools%2C%20) applies the variation of the Gower Distance for the imputation of numerical, categorical, ordered and semi-continuous variables.
+|
 | Missing data imputation method evaluation:
 |
 | **[A]** The performance of 16 missing data imputation methods were evaluated on the simulated dataset using the <span style="color: #0000FF">impute_simulated</span> method from the <mark style="background-color: #CCECFF">**missCompare**</mark> package. 
