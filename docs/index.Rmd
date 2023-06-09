@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 ```
 # **1. Table of Contents**
 |
-| This document presents a non-exhaustive list of procedures on missing data pattern analysis, imputation method evaluation and post imputation diagnostics using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>.    
+| This project explores various analysis and imputation procedures for incomplete data using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>. Missing data patterns were visualized using matrix, cluster and correlation plots, with the missing data mechanism evaluated using a Regression-Based Test. Methods applied in the analysis to replace missing data points with substituted values included **Random Replacement**, **Median Imputation**, **Mean Imputation**, **Mutivariate Data Analysis Imputation (Regularized, Expectation-Maximization)**, **Principal Component Analysis Imputation (Probabilistic, Bayesian, Support Vector Machine-Based, Non-Linear Iterative Partial Least Squares, Non-Linear Principal Component Analysis)**, **Multivariate Imputation by Chained Equations**, **Bayesian Multiple Imputation**, **Expectation-Maximization with Bootstrapping**, **Random Forest Imputation**, **Multiple Imputation Using Additive Regression**, **Bootstrapping and Predictive Mean Matching** and **K-Nearest Neighbors Imputation**. Performance of the missing data imputation methods was evaluated using the processing time, root mean squared error, mean absolute error and Kolmogorov-Smirnov test statistic metrics. Post-imputation diagnostics was performed to assess the plausibility of the substituted values in comparison to the complete data.
 |
 | Missing data refer to instances of observations intended to be collected but did not, which reduce the representativeness of the sample. Depending on how missing data occurred, it introduces bias into the statistical estimates and leads to inefficient data analysis. Imputation refers to the replacement of missing data with another value based on a reasonable estimate. Imputation algorithms applied in this study (mostly contained in the <mark style="background-color: #CCECFF">**missCompare**</mark>, <mark style="background-color: #CCECFF">**mi**</mark>, <mark style="background-color: #CCECFF">**mice**</mark>, <mark style="background-color: #CCECFF">**missForest**</mark>, <mark style="background-color: #CCECFF">**missMDA**</mark> and <mark style="background-color: #CCECFF">**pcaMethods**</mark> packages) attempt to perform a valid analysis for different missingness mechanisms with the objective of completing the dataset while maintaining its true underlying distribution and  multivariate associations.
 |
@@ -694,9 +694,7 @@ MDIE.Simulated.Imputed$Plot_KS
 |
 | [Multivariate Imputation by Chained Equations](https://journals.sagepub.com/doi/10.1177/0962280206074463) as an imputation method is based on fully conditional specification, where each incomplete variable is imputed by a separate model. As a sequential regression imputation technique, the algorithm imputes an incomplete column (target column) by generating plausible synthetic values given other columns in the data. Each incomplete column must act as a target column, and has its own specific set of predictors. For predictors that are incomplete themselves, the most recently generated imputations are used to complete the predictors prior to prior to imputation of the target columns.
 |
-| Missing data imputation method implementation:
-|
-| **[A]** The missing data imputation method from the <mark style="background-color: #CCECFF">**mice**</mark> package as implemented in the <mark style="background-color: #CCECFF">**missCompare**</mark> package showed: 
+| **[A]** The **Multivariate Imputation by Chained Equations** method from the <mark style="background-color: #CCECFF">**mice**</mark> package as implemented in the <mark style="background-color: #CCECFF">**missCompare**</mark> package showed: 
 |      **[A.1]** Relatively poor data plausibility for the numeric variables in the imputed dataset as compared to the original dataset.
 |      **[A.2]** Relatively good data plausibility for the categorical variables in the imputed dataset as compared to the original dataset.
 |      **[A.3]** Consistent numeric variable clustering in the imputed dataset as compared to the original dataset.
@@ -781,9 +779,9 @@ MDIPID.Imputed.MiceMixed.Diagnostics$Variable_clusters_orig
 
 ### 1.5.2 Imputation using HMISC AREGIMPUTE
 |
-| Missing data imputation method implementation:
+| [AREG : Multiple Imputation using Additive Regression, Bootstrapping, and Predictive Mean Matching](https://www.jstor.org/stable/24307424) creates flexible additive imputation models by taking all aspects of uncertainty in the imputations into account by using the bootstrap to approximate the process of drawing predicted values from a full Bayesian predictive distribution. Different bootstrap resamples are used for each of the multiple imputations, a flexible additive model is fitted on a sample with replacement from the original data and this model is used to predict all of the original missing and non-missing values for the target variable.
 |
-| **[A]** The missing data imputation method from the <mark style="background-color: #CCECFF">**Hmisc**</mark> package as implemented in the <mark style="background-color: #CCECFF">**missCompare**</mark> package showed: 
+| **[A]** The **Multiple Imputation Using Additive Regression** method from the <mark style="background-color: #CCECFF">**Hmisc**</mark> package as implemented in the <mark style="background-color: #CCECFF">**missCompare**</mark> package showed: 
 |      **[A.1]** Relatively poor data plausibility for the numeric variables in the imputed dataset as compared to the original dataset.
 |      **[A.2]** Relatively good data plausibility for the categorical variables in the imputed dataset as compared to the original dataset.
 |      **[A.3]** Consistent numeric variable clustering in the imputed dataset as compared to the original dataset.
@@ -868,9 +866,9 @@ MDIPID.Imputed.HmiscAregImpute.Diagnostics$Variable_clusters_orig
 
 ### 1.5.3 Imputation using VIM KNN
 |
-| Missing data imputation method implementation:
+| [K-Nearest Neighbors Imputation](https://www.jstatsoft.org/article/view/v074i07#:~:text=Title%3A%20Imputation%20with%20the%20R%20Package%20VIM.%20Abstract%3A,verify%20the%20imputation%20process%20using%20visualization%20tools%2C%20) applies the variation of the Gower Distance for the imputation of numerical, categorical, ordered and semi-continuous variables.
 |
-| **[A]** The missing data imputation method from the <mark style="background-color: #CCECFF">**VIM**</mark> package as implemented in the <mark style="background-color: #CCECFF">**missCompare**</mark> package showed: 
+| **[A]** The **K-Nearest Neighbors Imputation** method from the <mark style="background-color: #CCECFF">**VIM**</mark> package as implemented in the <mark style="background-color: #CCECFF">**missCompare**</mark> package showed: 
 |      **[A.1]** Relatively good data plausibility for the numeric variables in the imputed dataset as compared to the original dataset.
 |      **[A.2]** Relatively poor data plausibility for the categorical variables in the imputed dataset as compared to the original dataset.
 |      **[A.3]** Consistent numeric variable clustering in the imputed dataset as compared to the original dataset.
