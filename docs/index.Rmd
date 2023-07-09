@@ -1,5 +1,5 @@
 ---
-title: "R : Missing Data Pattern Analysis, Imputation Method Evaluation and Post-Imputation Diagnostics"
+title: "Data Preprocessing : Missing Data Pattern Analysis, Imputation Method Evaluation and Post-Imputation Diagnostics"
 author: "John Pauline Pineda"
 date: "August 16, 2022"
 output:  
